@@ -1,0 +1,1159 @@
+import { useState ,useEffect} from "react";
+import { useNavigate,useLocation } from "react-router-dom";
+import logo from '../assets/logovi.mp4';
+import "./SignupPage.css";
+
+function Signup() {
+  const [rotate, setRotate] = useState(false);
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [agreementChecked, setAgreementChecked] = useState(false);
+  const location = useLocation();
+
+const defaultFormData = {
+  pageName: "",
+  email: "",
+  phoneNumber: "",
+  dateOfBirth: "",
+  aadharNumber: "",
+  aadharPhoto: null,
+  panNumber: "",
+  panCard: null,
+  gender: "",
+  address: "",
+  city: "",
+  state: "",
+  pincode: "",
+  country: "",
+  fatherName: "",
+  motherName: "",
+  maritalStatus: "",
+  spouseName: "",
+  spouseAadharNumber: "",
+  spouseAadharPhoto: null,
+  spousePanNumber: "",
+  spousePanCard: null,
+
+  addressVerificationDoc: null,
+  declarationUndertak: null,
+  customerUndertake: null,
+  gdprDeclaration: null,
+
+  accountHolderName: "",
+  accountNumber: "",
+  confirmAccountNumber: "",
+  ifscCode: "",
+  bankName: "",
+  bankStatement: null,
+  sourceOfFund: null,
+  sourceOfWealth: null,
+
+  agreementPDF: null,
+  videoFile: null,
+};
+
+const [formData, setFormData] = useState(
+  location.state?.formData || defaultFormData
+);
+
+useEffect(() => {
+  if (location.state?.formData) {
+    setFormData(location.state.formData);
+  }
+
+  if (location.state?.editStep) {
+    setCurrentStep(location.state.editStep);
+  }
+}, [location.state]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: files[0]
+    }));
+  };
+
+  const validateStep = () => {
+   if (currentStep === 1) {
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return (
+    formData.pageName &&
+    emailRegex.test(formData.email) &&
+    formData.email === formData.confirmEmail &&
+    formData.password &&
+    formData.confirmPassword &&
+    formData.password === formData.confirmPassword &&
+    formData.phoneNumber &&
+    formData.aadharNumber.length === 12 &&
+    formData.aadharPhoto &&
+    formData.panNumber &&
+    formData.panCard &&
+    formData.fatherName &&
+    formData.motherName &&
+    formData.maritalStatus &&
+    formData.gender &&
+    formData.address &&
+    formData.city &&
+    formData.state &&
+    formData.pincode.length === 6 &&
+    formData.country &&
+    (formData.maritalStatus === "unmarried" ||
+      (formData.spouseName &&
+        formData.spouseAadharNumber &&
+        formData.spouseAadharPhoto &&
+        formData.spousePanNumber &&
+        formData.spousePanCard))
+  );
+}
+    if (currentStep === 3) {
+      return formData.addressVerificationDoc && formData.declarationUndertak && formData.customerUndertake && formData.declarationUndertak && formData.customerUndertake && formData.declarationUndertak && formData.customerUndertake &&
+             formData.gdprDeclaration;
+    }
+    if (currentStep === 2) {
+      return formData.accountHolderName && formData.accountNumber && formData.confirmAccountNumber && formData.accountNumber === formData.confirmAccountNumber && formData.bankStatement && formData.sourceOfFund && formData.sourceOfWealth &&
+             formData.ifscCode && formData.bankName;
+    }
+    if (currentStep === 4) {
+      return agreementChecked && formData.agreementPDF;
+    }
+    if (currentStep === 5) {
+      return formData.videoFile;
+    }
+    return false;
+  };
+
+  const handleNext = () => {
+    if (validateStep()) {
+      if (currentStep < 5) {
+        setCurrentStep(currentStep + 1);
+      }
+    } else {
+      alert("Please fill all required fields");
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSignupSubmit = (e) => {
+    e.preventDefault();
+    if (validateStep()) {
+      console.log("Form Data:", formData);
+      // Add your signup logic here
+      alert("Signup completed successfully!");
+      setRotate(true);
+      
+      setTimeout(() => {
+        navigate("/");
+      }, 800);
+    }
+  };
+
+  const handleSigninClick = (e) => {
+    e.preventDefault();
+    setRotate(true);
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 800);
+  };
+
+  return (
+    <div className={`signup-wrapper ${rotate ? "rotate-page" : ""}`}>
+
+  {/* LEFT SIDE BRANDING */}
+  <div className="signup-left">
+    <p className="vara-text">Secure & Regulated by VARA</p>
+
+    <h1 className="main-heading">
+      Your trusted <br />
+      partner for <span>virtual</span> <br />
+      assets
+    </h1>
+
+    <div className="branding-video">
+      <video
+        src={logo}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+    </div>
+  </div>
+
+  {/* RIGHT SIDE FORM */}
+  <div className="signup-right">
+    <div className="signup-card signup-card-full">
+
+        <p style={{ color: 'red', marginBottom: '5%' }}>NOTES : The information provided below has been compiled strictly in accordance with the guidance of <a href="https://fiu.gov.in" target="_blank" rel="noopener noreferrer" style={{ color: '#0040ff', textDecoration: 'underline' }}>FIU–India</a>.</p>
+
+        <h3>Create Account</h3>
+
+        {/* STEP INDICATOR */}
+        <div className="step-indicator">
+          {[1, 2, 3, 4, 5].map((step) => (
+            <div key={step} className={`step ${currentStep === step ? 'active' : ''} ${step < currentStep ? 'completed' : ''}`}>
+              <span>{step}</span>
+              <p className="step-label">
+                {step === 1 && "Personal"}
+                {step === 2 && "Bank"}
+                {step === 3 && "Questorys"}
+                {step === 4 && "Agreement"}
+                {step === 5 && "Video"}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <form onSubmit={handleSignupSubmit}>
+
+          {/* STEP 1: PERSONAL DETAILS */}
+          {currentStep === 1 && (
+            <div className="step-content">
+              <h4>1. Personal Details</h4>
+              
+              <div className="form-group">
+                <label>User Name As Per Aadhaar *</label>
+                <input
+                  type="text"
+                  name="pageName"
+                  value={formData.pageName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div> 
+
+              
+
+               <div className="form-group">
+                <label>Phone Number *</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+               <div className="form-group">
+                <label>Date Of Birth *</label>
+                <input
+                  type="date"
+                  name="dateOfBirth"
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                 <label>Email Id *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                    setFormData(prev => ({
+                    ...prev,
+                    email: e.target.value
+                  }))
+                }
+              required
+            />
+
+            {formData.email &&
+              !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+              <p className="error-message">
+              Please enter a valid email
+              </p>
+            )}
+          </div>
+
+
+          <div className="form-group">
+            <label>Confirm Email *</label>
+              <input
+                type="email"
+                name="confirmEmail"
+                value={formData.confirmEmail}
+                onChange={(e) =>
+                setFormData(prev => ({
+                ...prev,
+                confirmEmail: e.target.value
+              }))
+            }
+            required
+          />
+
+        {formData.confirmEmail &&
+          formData.email !== formData.confirmEmail && (
+          <p className="error-message">
+          Email does not match
+          </p>
+          )}
+        </div>
+
+
+              <div className="form-group">
+                <label>Password *</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Confirm Password *</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                />
+                {formData.password !== formData.confirmPassword && (
+                  <p className="error-message">Passwords do not match!</p>
+                )}
+              </div>
+
+
+              <div className="form-group">
+                <label>Address *</label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                  style={{width:'100%'}}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>City *</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* State */}
+            <div className="form-group">
+              <label>State *</label>
+              <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          {/* Pincode */}
+          <div className="form-group">
+            <label>Pincode *</label>
+            <input
+              type="text"
+              name="pincode"
+              value={formData.pincode}
+              onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ""); // numbers only
+            if (value.length <= 6) {
+            setFormData(prev => ({
+            ...prev,
+          pincode: value
+        }));
+      }
+    }}
+    maxLength={6}
+    required
+  />
+  {formData.pincode.length > 0 && formData.pincode.length !== 6 && (
+    <p className="error-message">Pincode must be exactly 6 digits</p>
+  )}
+</div>
+
+{/* Country */}
+      <div className="form-group">
+        <label>Country *</label>
+        <input
+          type="text"
+          name="country"
+          list="countryList"
+          value={formData.country}
+          onChange={handleInputChange}
+          required
+        />
+
+  <datalist id="countryList">
+    <option value="India" />
+    <option value="United States" />
+    <option value="United Kingdom" />
+    <option value="Canada" />
+    <option value="Australia" />
+    <option value="Singapore" />
+    <option value="UAE" />
+    <option value="Germany" />
+    <option value="France" />
+  </datalist>
+
+      </div>
+
+             <div className="form-group">
+  <label>Gender *</label>
+
+  <div className="radio-group">
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="gender"
+        value="male"
+        checked={formData.gender === "male"}
+        onChange={handleInputChange}
+        required
+      />
+      Male
+    </label>
+
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="gender"
+        value="female"
+        checked={formData.gender === "female"}
+        onChange={handleInputChange}
+      />
+      Female
+    </label>
+
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="gender"
+        value="other"
+        checked={formData.gender === "other"}
+        onChange={handleInputChange}
+      />
+      Other
+    </label>
+  </div>
+</div>
+
+                <div className="form-group">
+                <label>Aadhaar Number *</label>
+               <input
+                  type="text"
+                  name="aadharNumber"
+                  value={formData.aadharNumber}
+                  onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, ""); // numbers only
+                if (value.length <= 12) {
+                  setFormData(prev => ({
+                  ...prev,
+                  aadharNumber: value
+                }));
+                }
+              }}
+              maxLength={16}
+              required
+            />
+            {formData.aadharNumber.length > 0 && formData.aadharNumber.length !== 12 && (
+            <p className="error-message">Aadhaar number must be exactly 12 digits</p>
+          )}
+        </div>
+
+              <div className="form-group">
+                <label>Aadhaar Upload (Download before 30 Days) *</label>
+                <input
+                  type="file"
+                  name="aadharPhoto"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.aadharPhoto && (
+                  <p className="file-name">✓ {formData.aadharPhoto.name}</p>
+                )}
+              </div>
+              
+
+              <div className="form-group">
+                <label>PAN Card Number *</label>
+                <input
+                  type="text"
+                  name="panNumber"
+                  value={formData.panNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>PAN Upload (Download before 30 Days) *</label>
+                <input
+                  type="file"
+                  name="panCard"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.panCard && (
+                  <p className="file-name">✓ {formData.panCard.name}</p>
+                )}
+              </div>
+
+             
+
+
+              <div className="form-group">
+                <label>Father Name *</label>
+                <input
+                  type="text"
+                  name="fatherName"
+                  value={formData.fatherName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Mother Name *</label>
+                <input
+                  type="text"
+                  name="motherName"
+                  value={formData.motherName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+             
+
+              {/* Marital Status */}
+              <div className="form-group">
+                <label>Marital Status *</label>
+                <div style={{ display: "flex", gap: "20px" }}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="maritalStatus"
+                      value="married"
+                      checked={formData.maritalStatus === "married"}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    Married
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name="maritalStatus"
+                      value="unmarried"
+                      checked={formData.maritalStatus === "unmarried"}
+                      onChange={handleInputChange}
+                    />
+                    Unmarried
+                  </label>
+                </div>
+              </div>
+                            {formData.maritalStatus === "married" && (
+                <>
+                  <h4 style={{ marginTop: "25px" }}>Spouse  Details</h4>
+
+                  <div className="form-group">
+                    <label>Spouse Name *</label>
+                    <input
+                      type="text"
+                      name="spouseName"
+                      value={formData.spouseName}
+                      onChange={handleInputChange}
+                      required
+                    />
+
+                  </div>
+
+                  <div className="form-group">
+                    <label> Spouse Aadhaar *</label>
+                    <input
+                      type="text"
+                      name="spouseAadharNumber"
+                      value={formData.spouseAadharNumber}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Spouse Aadhaar Upload *</label>
+                    <input
+                      type="file"
+                      name="spouseAadharPhoto"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Spouse PANCARD Number *</label>
+                    <input
+                      type="text"
+                      name="spousePanNumber"
+                      value={formData.spousePanNumber}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Spouse PANCARD Upload *</label>
+                    <input
+                      type="file"
+                      name="spousePanCard"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                      required
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* STEP 3: AGREEMENT */}
+          {currentStep === 3 && (
+            <div className="step-content">
+              <div style={{ display: 'flex', gap: '30px', justifyContent: 'space-between' }}>
+                
+                {/* LEFT SIDE - AGREEMENT */}
+                <div style={{ flex: 1 }}>
+                  <h4>3. Terms & Agreement</h4>
+
+                  <div >
+                  <h5>Documents</h5>
+
+                  {/* ADDRESS VERIFICATION */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>1. Address Verification</label>
+                      <input
+                        type="file"
+                        name="addressVerificationDoc"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.addressVerificationDoc && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/address-verification.pdf" 
+                        download="Address_Verification.pdf"
+                        title="Download Address Verification"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+
+
+                {/* DECLARATION & UNDERTAKING */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>2. Declaration Undertake of complition and source of fund</label>
+                      <input
+                        type="file"
+                        name="declarationUndertak"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.declarationUndertak && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/declaration.pdf" 
+                        download="Declaration_Undertaking.pdf"
+                        title="Download Declaration"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+                  
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>3. AML,CFT and source fund (us for cropyt trading) decleartion</label>
+                      <input
+                        type="file"
+                        name="declarationUndertak"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.declarationUndertak && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/customerUndertake.pdf" 
+                        download="Customer_Undertaking.pdf"
+                        title="Download Customer Undertaking"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>4. Customer undertake king for link</label>
+                      <input
+                        type="file"
+                        name="customerUndertake"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.customerUndertake && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/customerUndertake.pdf" 
+                        download="Customer_Undertaking.pdf"
+                        title="Download Customer Undertaking"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>5. Letter of ostiontion</label>
+                      <input
+                        type="file"
+                        name="declarationUndertak"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.declarationUndertak && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/declaration.pdf" 
+                        download="Declaration_Undertaking.pdf"
+                        title="Download Declaration"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>6. Poicticaly expoes person (PEP) self decleartion</label>
+                      <input
+                        type="file"
+                        name="declarationUndertak"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.declarationUndertak && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/declaration.pdf" 
+                        download="Declaration_Undertaking.pdf"
+                        title="Download Declaration"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>7. GDPR (General Data Protection Regulation)</label>
+                      <input
+                        type="file"
+                        name="gdprDeclaration"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                      />
+                      {formData.gdprDeclaration && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      )}
+                    </div>
+                    <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
+                      <a 
+                        href="/gdpr.pdf" 
+                        download="GDPR.pdf"
+                        title="Download GDPR Declaration"
+                        style={{
+                          fontSize: '16px',
+                          cursor: 'pointer',
+                          color: '#f4c430',
+                          textDecoration: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Download
+                      </a>
+                    </div>
+                  </div>
+                  
+
+
+                </div>    
+                    
+
+
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: BANK DETAILS */}
+          {currentStep === 2 && (
+            <div className="step-content">
+              <h4>2. Bank Details</h4>
+             
+              <div className="form-group">
+                <label>Name on Bank Account <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="accountHolderName"
+                  placeholder="Enter account holder name" 
+                  value={formData.accountHolderName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Account Number <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="accountNumber"
+                  placeholder="Enter account number" 
+                  value={formData.accountNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Confirm Account Number <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="confirmAccountNumber"
+                  placeholder="Re-enter account number"
+                  value={formData.confirmAccountNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+                 {formData.accountNumber !== formData.confirmAccountNumber && (
+                  <p className="error-message">Account numbers do not match!</p>
+                )}  
+
+              </div>
+
+              <div className="form-group">
+                <label>Bank Name <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="bankName"
+                  placeholder="Enter bank name" 
+                  value={formData.bankName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>IFSC Code <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="ifscCode"
+                  placeholder="Enter IFSC code" 
+                  value={formData.ifscCode}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+
+              
+
+
+              <div className="form-group">
+                <label>Upload Bank Statement (Last 1 Year) <span className="required">*</span></label>
+                <input 
+                  type="file" 
+                  name="bankStatement"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.bankStatement && (
+                  <p className="file-name">✓ {formData.bankStatement.name}</p>
+                )}
+              </div>
+               
+                <div className="form-group">
+                <label>Source Of Fund (Last 1 Year Bank Statement)  <span className="required">*</span></label>
+                <input 
+                  type="file" 
+                  name="sourceOfFund"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.sourceOfFund && (
+                  <p className="file-name">✓ {formData.sourceOfFund.name}</p>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Source Of Wealth Upload (last 1 Year Bank Statement)  <span className="required">*</span></label>
+                <input 
+                  type="file" 
+                  name="sourceOfWealth"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.sourceOfWealth && (
+                  <p className="file-name">✓ {formData.sourceOfWealth.name}</p>
+                )}
+              </div>
+
+               <div className="bank-requirements">
+                <h5>Bank Statement Requirements:</h5>
+                <ul>
+                  <li>✓ Must be a PDF file</li>
+                  <li>✓ Should cover the last 12 months</li>
+                  <li>✓ Must include account holder's name and account number</li> 
+                  <li>✓ Should show all transactions and balances</li>
+                  <li>✓ Source of Fund and Source of Wealth should be different </li>
+                </ul>
+                </div>
+              
+
+              
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            <div className="step-content">
+              <h4>4. Agreement PDF</h4>
+              <p className="declaration-instruction">
+                Please upload the signed agreement PDF.
+              </p>
+
+              <div className="form-group">
+                <label>Upload Signed Agreement PDF *</label>
+                <input
+                  type="file"
+                  name="agreementPDF"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.agreementPDF && (
+                  <p style={{ color: '#689f38', marginTop: '8px' }}>✓ {formData.agreementPDF.name} uploaded</p>
+                )}
+              </div>
+
+              <div className="form-group checkbox-group" style={{ marginTop: '20px' }}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={agreementChecked}
+                    onChange={(e) => setAgreementChecked(e.target.checked)}
+                  />
+                  <span>I agree to all terms and conditions</span>
+                </label>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: VIDEO CONFIRMATION */}
+          {currentStep === 5 && (
+            <div className="step-content">
+              <h4>5. Video Confirmation</h4>
+              
+              <p className="video-instruction">
+                Please upload a brief video (30 seconds - 2 minutes) for identity verification. 
+                Show your face clearly and confirm your willingness to proceed.
+              </p>
+
+              <div className="form-group">
+                <label>Video File Upload <span className="required">*</span></label>
+                <input 
+                  type="file" 
+                  name="videoFile"
+                  accept="video/*"
+                  onChange={handleFileChange}
+                  required
+                />
+                {formData.videoFile && (
+                  <p className="file-name">✓ {formData.videoFile.name}</p>
+                )}
+              </div>
+
+              <div className="video-requirements">
+                <h5>Video Requirements:</h5>
+                <ul>
+                  <li>✓ Clear face visibility</li>
+                  <li>✓ Good lighting</li>
+                  <li>✓ Confirm your name and phone number</li>
+                  <li>✓ Duration: 30 seconds - 2 minutes</li>
+                  <li>✓ Maximum file size: 50MB</li>
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* NAVIGATION BUTTONS */}
+          <div className="form-buttons">
+            <button 
+              type="button" 
+              className="prev-btn"
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+            >
+              Previous
+            </button>
+            
+            {currentStep < 5 ? (
+              <button 
+                type="button" 
+                className="next-btn"
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            ) : (
+             <button
+                type="button"
+                className="signup-btn"
+                style={{width:'50%'}}
+                onClick={() => {
+              if (validateStep()) {
+                 navigate("/review", { state: { formData } });
+              } else {
+                  alert("Please fill all required fields");
+              }
+            }}
+              disabled={!validateStep() || !agreementChecked}
+            >
+          Verify
+        </button>
+            )}
+          </div>
+        </form>
+
+        <p className="signin-text">
+          Already have an account?{" "}
+          <span className="link-btn" onClick={handleSigninClick}>
+            Sign in
+          </span>
+        </p>
+      </div>
+    </div>
+    </div>
+  );
+}
+
+export default Signup;

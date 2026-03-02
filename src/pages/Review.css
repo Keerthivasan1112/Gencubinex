@@ -1,0 +1,108 @@
+.review-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.review-card {
+  width: 700px;
+  background: rgb(254, 253, 253);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 20px;
+  color: #000;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+.review-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.review-logo img {
+  width: 70px;
+}
+
+.review-logo h2 {
+  margin-top: 10px;
+  letter-spacing: 2px;
+}
+
+.review-section {
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+}
+
+.review-section h4 {
+  margin-bottom: 10px;
+  color: #f4c430;
+}
+
+.review-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.edit-btn {
+  padding: 10px 20px;
+  background: #ff9800;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.confirm-btn {
+  padding: 10px 20px;
+  background: #4caf50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.edit-btn:hover {
+  background: #e68900;
+}
+
+.confirm-btn:hover {
+  background: #43a047;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  row-gap: 10px;
+  column-gap: 20px;
+  padding: 10px 0;
+  text-align: left;
+}
+
+.review-grid div:nth-child(odd) {
+  font-weight: 600;
+  color: #333;
+}
+
+.review-grid div:nth-child(even) {
+  text-align: center;
+  color: #555;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-video {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+}

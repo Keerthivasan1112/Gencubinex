@@ -77,8 +77,14 @@ function ReviewPage() {
                 <div>Aadhaar Number</div>
                 <div>{formData.aadharNumber}</div>
 
+                <div>Aadhaar Number PDF</div>
+                <div>{formData.aadharDoc ? "Uploaded" : "Not Uploaded"}</div>
+
                 <div> Pancard Number</div>
                 <div>{formData.panNumber}</div>
+
+                  <div>Pancard PDF</div>
+                <div>{formData.panDoc ? "Uploaded" : "Not Uploaded"}</div>
 
                 <div>Father's Name</div>
                 <div>{formData.fatherName}</div>
@@ -93,8 +99,18 @@ function ReviewPage() {
                   <>
                     <div>Spouse's Name</div>
                     <div>{formData.spouseName}</div>
+
                     <div>Spouse's Aadhar Number</div>
                     <div>{formData.spouseAadharNumber}</div>
+
+                    <div>Spouse's Aadhar PDF</div>
+                    <div>{formData.spouseAadharDoc ? "Uploaded" : "Not Uploaded"}</div>
+
+                    <div>Spouse's Pancard Number</div>
+                    <div>{formData.spousePanNumber}</div>
+
+                    <div>Spouse's Pancard PDF</div>
+                    <div>{formData.spousePanDoc ? "Uploaded" : "Not Uploaded"}</div>
                   </>   
                 )}
                 
@@ -119,13 +135,31 @@ function ReviewPage() {
             </div>
 
         </div>
+        <div className="review-section">
+          <h4>questionry PDF</h4>
+          <div className="review-grid">
+
+                <div>Address Verification PDF</div>
+                <div>{formData.addressVerificationDoc ? "Uploaded" : "Not Uploaded"}</div>
+            </div>
+
+        </div>
 
         <div className="review-section">
             <h4>Agreement</h4>
+
             <div className="review-grid">
-                
+                <div>Agreement PDF</div>
+                <div>{formData.agreementPDF ? "Uploaded" : "Not Uploaded"}</div>
             </div>
 
+        </div>
+        <div className="review-section">
+            <h4>Video KYC</h4>
+            <div className="review-grid">
+                <div>Video KYC</div>
+                <div>{formData.videoKYC ? "Recorded" : "Not Recorded"}</div>
+            </div>
         </div>
 
         <div className="review-buttons">

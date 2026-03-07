@@ -88,6 +88,7 @@ input {
   margin-bottom: 20px;
   font-size: 15px;
   color: #f40000;
+  cursor: pointer;
 }
 
 .login-btn {

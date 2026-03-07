@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState ,useEffect,useRef} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import logo from '../assets/logovi.mp4';
 import "./SignupPage.css";
@@ -9,6 +9,22 @@ function Signup() {
   const [currentStep, setCurrentStep] = useState(1);
   const [agreementChecked, setAgreementChecked] = useState(false);
   const location = useLocation();
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+
+  const [recording, setRecording] = useState(false);
+  const [recordedVideoURL, setRecordedVideoURL] = useState(null);
+  const [timer, setTimer] = useState(0);
+  const timerRef = useRef(null);
+  const [showAgreementPopup, setShowAgreementPopup] = useState(false);
+
+const [popupChecks, setPopupChecks] = useState({
+  term1: false,
+  term2: false,
+  term3: false,
+  term4: false,
+  term5: false,
+});
 
 const defaultFormData = {
   pageName: "",
@@ -55,6 +71,108 @@ const defaultFormData = {
 const [formData, setFormData] = useState(
   location.state?.formData || defaultFormData
 );
+
+// 🎬 Start Recording
+
+const startCamera = async () => {
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Camera not supported");
+      return;
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: true,
+    });
+
+    videoRef.current.srcObject = stream;
+
+    // AUTO START RECORDING WHEN CAMERA ON
+    startRecording(stream);
+
+  } catch (error) {
+    console.error("Camera error:", error);
+    alert("Camera access denied");
+  }
+};
+
+const startRecording = (stream) => {
+  let options = {};
+
+  if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
+    options = { mimeType: "video/webm;codecs=vp9" };
+  } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) {
+    options = { mimeType: "video/webm;codecs=vp8" };
+  } else {
+    options = { mimeType: "video/webm" };
+  }
+
+  const mediaRecorder = new MediaRecorder(stream, options);
+  mediaRecorderRef.current = mediaRecorder;
+
+  let chunks = [];
+
+  mediaRecorder.ondataavailable = (event) => {
+    if (event.data.size > 0) {
+      chunks.push(event.data);
+    }
+  };
+
+  mediaRecorder.onstop = () => {
+    const blob = new Blob(chunks, { type: "video/webm" });
+    const videoURL = URL.createObjectURL(blob);
+
+    setRecordedVideoURL(videoURL);
+
+    setFormData((prev) => ({
+      ...prev,
+      videoFile: blob,
+    }));
+
+    stream.getTracks().forEach((track) => track.stop());
+
+    clearInterval(timerRef.current);
+    setRecording(false);
+    setTimer(0);
+  };
+
+  mediaRecorder.start();
+  setRecording(true);
+
+  // TIMER START
+  setTimer(0);
+  timerRef.current = setInterval(() => {
+    setTimer((prev) => {
+      if (prev >= 119) {
+        stopRecording();
+        return 120;
+      }
+      return prev + 1;
+    });
+  }, 1000);
+};
+
+const stopRecording = () => {
+  if (mediaRecorderRef.current && recording) {
+    mediaRecorderRef.current.stop();
+  }
+
+  if (timerRef.current) {
+    clearInterval(timerRef.current);
+  }
+
+  setRecording(false);
+};
+
+
+useEffect(() => {
+  return () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+  };
+}, []);
 
 useEffect(() => {
   if (location.state?.formData) {
@@ -1058,39 +1176,195 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
               <div className="form-group checkbox-group" style={{ marginTop: '20px' }}>
                 <label>
                   <input 
-                    type="checkbox" 
+                    type="checkbox"
                     checked={agreementChecked}
-                    onChange={(e) => setAgreementChecked(e.target.checked)}
-                  />
+                    onChange={() => {
+                  if (!agreementChecked) {
+                  setShowAgreementPopup(true);
+                  } else {
+                      setAgreementChecked(false);
+                    }
+                  }}
+                />
                   <span>I agree to all terms and conditions</span>
                 </label>
               </div>
+              {showAgreementPopup && (
+              <div className="popup-overlay">
+                <div className="popup-box">
+                      <h3>Terms & Conditions</h3>
+
+                    <div className="popup-content">
+
+        <label>
+          <input
+            type="checkbox"
+            checked={popupChecks.term1}
+            onChange={(e) =>
+              setPopupChecks({ ...popupChecks, term1: e.target.checked })
+            }
+          />
+          <span>
+          I confirm all personal details are correct.
+          </span>
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={popupChecks.term2}
+            onChange={(e) =>
+              setPopupChecks({ ...popupChecks, term2: e.target.checked })
+            }
+          />
+          <span>
+          I agree to AML & KYC compliance.
+          </span>
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={popupChecks.term3}
+            onChange={(e) =>
+              setPopupChecks({ ...popupChecks, term3: e.target.checked })
+            }
+          />
+          <span>
+          I understand data protection policies.
+          </span>
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={popupChecks.term4}
+            onChange={(e) =>
+              setPopupChecks({ ...popupChecks, term4: e.target.checked })
+            }
+          />
+          <span>
+          I confirm source of funds is legitimate.
+          </span>
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={popupChecks.term5}
+            onChange={(e) =>
+              setPopupChecks({ ...popupChecks, term5: e.target.checked })
+            }
+          />
+          <span>
+          I agree to all regulatory requirements.
+          </span>
+        </label>
+
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <button
+          className="confirm-btn"
+          disabled={
+            !popupChecks.term1 ||
+            !popupChecks.term2 ||
+            !popupChecks.term3 ||
+            !popupChecks.term4 ||
+            !popupChecks.term5
+          }
+          onClick={() => {
+            setAgreementChecked(true);
+            setShowAgreementPopup(false);
+          }}
+        >
+          Confirm
+        </button>
+
+        <button
+          className="cancel-btn"
+          onClick={() => setShowAgreementPopup(false)}
+          style={{ marginLeft: "10px" }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
             </div>
           )}
 
           {/* STEP 5: VIDEO CONFIRMATION */}
-          {currentStep === 5 && (
-            <div className="step-content">
-              <h4>5. Video Confirmation</h4>
-              
-              <p className="video-instruction">
-                Please upload a brief video (30 seconds - 2 minutes) for identity verification. 
-                Show your face clearly and confirm your willingness to proceed.
-              </p>
+        {currentStep === 5 && (
+  <div className="step-content">
+    <h4>5. Video Confirmation</h4>
 
-              <div className="form-group">
-                <label>Video File Upload <span className="required">*</span></label>
-                <input 
-                  type="file" 
-                  name="videoFile"
-                  accept="video/*"
-                  onChange={handleFileChange}
-                  required
-                />
-                {formData.videoFile && (
-                  <p className="file-name">✓ {formData.videoFile.name}</p>
-                )}
-              </div>
+    <p className="video-instruction">
+      Record a short video (Maximum 2 Minutes).
+      Please show your face clearly and confirm your name & phone number.
+    </p>
+
+    <div className="video-requirements">
+      <div>{formData.pageName}</div>
+      <div>{formData.phoneNumber}</div>
+    </div>
+
+
+    <div style={{ textAlign: "center", marginBottom: "20px" }}>
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted={recording}
+        controls={!recording && !!recordedVideoURL}
+        style={{
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "10px",
+          background: "#000",
+        }}
+      />
+    </div>
+
+    {/* ⏱ Timer */}
+    {recording && (
+      <p
+        style={{
+          fontSize: "18px",
+          fontWeight: "bold",
+          color: timer >= 110 ? "red" : "green",
+          marginBottom: "15px",
+        }}
+      >
+        ⏱ {Math.floor(timer / 60)}:
+        {(timer % 60).toString().padStart(2, "0")} / 2:00
+      </p>
+    )}
+
+    {!recording ? (
+      <button
+        type="button"
+        className="next-btn"
+        onClick={startCamera}
+      >
+        🎥 Start Recording
+      </button>
+    ) : (
+      <button
+        type="button"
+        className="prev-btn"
+        onClick={stopRecording}
+      >
+        ⏹ Stop Recording
+      </button>
+    )}
+
+    {recordedVideoURL && !recording && (
+      <p style={{ color: "green", marginTop: "15px" }}>
+        ✓ Video recorded successfully
+      </p>
+    )}
 
               <div className="video-requirements">
                 <h5>Video Requirements:</h5>

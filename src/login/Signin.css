@@ -365,6 +365,7 @@ input {
   flex-direction: column;
   justify-content: center;
   background: linear-gradient(to right, #f8f8f8, #f1f1f1);
+  color: black;
 }
 
 .top-text {
@@ -406,6 +407,7 @@ input {
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  color: black;
 }
 
 .brand-title {

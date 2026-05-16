@@ -20,19 +20,40 @@ function Login() {
   const navigate = useNavigate();
 
   // 🔥 Step 1 - Login
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert("Please enter email and password");
-      return;
-    }
+  // const handleLogin = () => {
+  //   if (!email || !password) {
+  //     alert("Please enter email and password");
+  //     return;
+  //   }
 
-    // 🔥 Backend login API call here
-    // If success → send OTP & show OTP input
+  //   // 🔥 Backend login API call here
+  //   // If success → send OTP & show OTP input
 
+  //   setShowOtp(true);
+
+  // };
+
+
+  const handleLogin = async () => {
+  if (!email || !password) {
+    alert("Enter email & password");
+    return;
+  }
+debugger;
+  const res = await fetch("https://localhost:7085/api/signin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.text();
+
+  if (data === "OTP Sent") {
     setShowOtp(true);
-
-  };
-
+  } else {
+    alert(data);
+  }
+};
    const handleChange = (element, index) => {
     if (!/^[0-9]?$/.test(element.value)) return;
 
@@ -53,22 +74,80 @@ function Login() {
   };
 
   // 🔥 Step 2 - OTP Verify
- const handleVerifyOtp = () => {
-    const finalOtp = otpValues.join("");
+// const handleVerifyOtp = () => {
+//   const finalOtp = otpValues.join("");
 
-    if (finalOtp.length !== otpLength) {
-      alert("Enter valid 5-digit OTP");
-      return;
+//   if (finalOtp.length !== otpLength) {
+//     alert("Enter valid 5-digit OTP");
+//     return;
+//   }
+
+//   if (finalOtp === "12345") {
+
+//     localStorage.setItem("userEmail", email);
+//     localStorage.setItem("isLoggedIn", "true");
+
+//     // ✅ ADMIN CHECK
+//     if (email === "admin@gencubinex.com") {
+//       localStorage.setItem("role", "admin");
+//     } else {
+//       localStorage.setItem("role", "user");
+//     }
+
+//     navigate("/home");
+
+//   } else {
+//     alert("Invalid OTP");
+//   }
+// };
+const handleVerifyOtp = async () => {
+  const finalOtp = otpValues.join("");
+
+  const res = await fetch("https://localhost:7085/api/signin/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp: finalOtp }),
+  });
+if (res.ok) {
+  localStorage.setItem("userEmail", email); // ✅ MUST
+}
+  const data = await res.text();
+
+  if (data === "Login Success") {
+ let adminData = null;
+
+ if (email === "masteradmin@gencubinex.com") {
+      adminData = {
+        name: "Admin 1",
+        role: "master",
+        email: email,
+      };
+    } else if (email === "admin2@gencubinex.com") {
+      adminData = {
+        name: "Admin 2",
+        role: "admin2",
+        email: email,
+      };
+    } else if (email === "admin3@gencubinex.com") {
+      adminData = {
+        name: "Admin 3",
+        role: "admin3",
+        email: email,
+      };
     }
 
-    // 🔥 Replace with backend OTP verification
-    if (finalOtp === "12345") {
-      navigate("/home");
+if (adminData) {
+      localStorage.setItem("adminUser", JSON.stringify(adminData));
+      localStorage.setItem("role", adminData.role);
+      navigate("/admin");
     } else {
-      alert("Invalid OTP");
+      localStorage.setItem("role", "user");
+     navigate("/home",{ state: { email } });
     }
-  };
-
+  } else {
+    alert(data);
+  }
+};
 
   const handleSignupClick = (e) => {
     e.preventDefault();
@@ -155,8 +234,8 @@ function Login() {
               <h3>Enter OTP</h3>
 
               <p className="otp-text">
-                OTP sent to {email}
-              </p>
+  OTP sent to {email.replace(/(.{2}).+(@.+)/, "$1****$2")}
+</p>
 
               <div className="otp-container">
                 {otpValues.map((data, index) => (

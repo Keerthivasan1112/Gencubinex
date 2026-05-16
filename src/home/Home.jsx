@@ -3,6 +3,7 @@ import "./Home.css";
 import logo from '../assets/logovi.mp4';
 import { useNavigate } from "react-router-dom";
 import logos from '../assets/log.svg';
+import log from '../assets/lo.png';
 
 function Home() {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ function Home() {
       </div>
 
       {/* NAVBAR */}
-      <nav className="navbar">
+      <nav className="navbars">
         <div className="log">
            <div className="logo">
               <div className="logo">
@@ -92,7 +93,7 @@ function Home() {
         </div>
 
         <div className="hero-right">
-          <img src={logos} alt="Dashboard Preview" />
+          <img src={log} alt="Dashboard Preview" />
         </div>
 
       </div>

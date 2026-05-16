@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logovi.mp4";
 import "./Review.css";
+import { MdDisabledVisible } from "react-icons/md";
+import { BsDisplay } from "react-icons/bs";
 
 function ReviewPage() {
   const { state } = useLocation();
@@ -12,10 +14,106 @@ function ReviewPage() {
     return <h3>No Data Found</h3>;
   }
 
-  const handleConfirm = () => {
-    alert("Account Created Successfully!");
-    navigate("/");
-  };
+const handleConfirm = async () => {
+  debugger;
+  try {
+    const data = new FormData();
+
+    // ✅ TEXT FIELDS (PascalCase MUST match .NET)
+    data.append("PageName", formData.pageName);
+    data.append("Email", formData.email);
+    data.append("Password", formData.password);
+    data.append("PhoneNumber", formData.phoneNumber);
+    data.append("DateOfBirth", formData.dateOfBirth);
+
+    data.append("AadharNumber", formData.aadharNumber);
+    data.append("PanNumber", formData.panNumber);
+
+    data.append("Gender", formData.gender);
+    data.append("Address", formData.address);
+    data.append("City", formData.city);
+    data.append("State", formData.state);
+    data.append("Pincode", formData.pincode);
+    data.append("Country", formData.country);
+
+    data.append("FatherName", formData.fatherName);
+    data.append("MotherName", formData.motherName);
+    data.append("MaritalStatus", formData.maritalStatus);
+
+    data.append("AccountHolderName", formData.accountHolderName);
+    data.append("AccountNumber", formData.accountNumber);
+    data.append("IFSCCode", formData.ifscCode);
+    data.append("BankName", formData.bankName);
+
+    // ✅ FILES (VERY IMPORTANT NAMES MATCH .NET MODEL)
+
+    if (formData.aadharPhoto)
+      data.append("AadharPhoto", formData.aadharPhoto);
+
+    if (formData.panCard)
+      data.append("PanCard", formData.panCard);
+
+    if (formData.bankStatement)
+      data.append("BankStatement", formData.bankStatement);
+
+    if (formData.sourceOfFund)
+      data.append("SourceOfFund", formData.sourceOfFund);
+
+    if (formData.sourceOfWealth)
+      data.append("SourceOfWealth", formData.sourceOfWealth);
+
+    if (formData.videoFile)
+      data.append("VideoFile", formData.videoFile);
+
+    if (formData.addressVerificationDoc)
+      data.append("AddressVerification", formData.addressVerificationDoc);
+
+    if (formData.agreementPDF)
+      data.append("AgreementPDF", formData.agreementPDF);
+
+    if (formData.spouseAadharDoc)
+      data.append("SpouseAadharPhoto", formData.spouseAadharDoc);
+
+    if (formData.spousePanDoc)
+      data.append("SpousePanCard", formData.spousePanDoc);
+
+    // ✅ API CALL
+     const res = await fetch("https://localhost:7085/api/signup/register", {
+      method: "POST",
+      body: data,
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("API Failed");
+    }
+
+    //alert("Saved to DB ✅");
+
+    // 👉 AFTER SAVE → OTP PAGE
+    navigate("/otp-verification", {
+      state: {
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+      },
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert("Error Saving ❌");
+  }
+};
+
+  // const handleConfirm = () => {
+  //  navigate("/otp-verification", {
+  //   state: {
+  //     email: formData.email,
+  //     phoneNumber: formData.phoneNumber
+  //   }
+  // });
+  // };
 
   const handleEdit = () => {
     navigate("/signup-page", { state: { formData, editStep: 1 } });
@@ -50,6 +148,9 @@ function ReviewPage() {
                 <div>Email</div>
                 <div>{formData.email}</div>
 
+                <div style={{display:"none"}}>Password</div>
+                <div style={{display:"none"}}>{formData.password}</div>
+
                 <div>Phone Number</div>
                 <div>{formData.phoneNumber}</div>
 
@@ -78,13 +179,13 @@ function ReviewPage() {
                 <div>{formData.aadharNumber}</div>
 
                 <div>Aadhaar Number PDF</div>
-                <div>{formData.aadharDoc ? "Uploaded" : "Not Uploaded"}</div>
+                <div>{formData.aadharPhoto.name ? "Uploaded" : "Not Uploaded"}</div>
 
                 <div> Pancard Number</div>
                 <div>{formData.panNumber}</div>
 
                   <div>Pancard PDF</div>
-                <div>{formData.panDoc ? "Uploaded" : "Not Uploaded"}</div>
+                <div>{formData.panCard.name ? "Uploaded" : "Not Uploaded"}</div>
 
                 <div>Father's Name</div>
                 <div>{formData.fatherName}</div>
@@ -154,13 +255,25 @@ function ReviewPage() {
             </div>
 
         </div>
-        <div className="review-section">
-            <h4>Video KYC</h4>
-            <div className="review-grid">
-                <div>Video KYC</div>
-                <div>{formData.videoKYC ? "Recorded" : "Not Recorded"}</div>
-            </div>
-        </div>
+<div className="review-section">
+  <h4>Video KYC</h4>
+
+  <div className="review-grid">
+    <div>Video KYC</div>
+    <div>{formData.videoFile ? "Recorded" : "Not Recorded"}</div>
+  </div>
+
+  {formData.videoFile && (
+    <div style={{ marginTop: "15px" }}>
+      <video
+        controls
+        width="300"
+        src={URL.createObjectURL(formData.videoFile)}
+        style={{ borderRadius: "10px" }}
+      />
+    </div>
+  )}
+</div>
 
         <div className="review-buttons">
           <button className="edit-btn" onClick={handleEdit}>

@@ -17,6 +17,31 @@ function Signup() {
   const [timer, setTimer] = useState(0);
   const timerRef = useRef(null);
   const [showAgreementPopup, setShowAgreementPopup] = useState(false);
+  const [personalSubStep, setPersonalSubStep] = useState(1);
+
+
+  const accounts = [
+  {
+    bank: "SBI Bank",
+    account: "1234567890",
+    ifsc: "SBIN0001234"
+  },
+  {
+    bank: "HDFC Bank",
+    account: "9876543210",
+    ifsc: "HDFC0005678"
+  },
+  {
+    bank: "ICICI Bank",
+    account: "4561237890",
+    ifsc: "ICIC0009012"
+  }
+];
+
+// 🔥 random account select
+const [selectedAccount, setSelectedAccount] = useState(null);
+
+
 
 const [popupChecks, setPopupChecks] = useState({
   term1: false,
@@ -66,11 +91,35 @@ const defaultFormData = {
 
   agreementPDF: null,
   videoFile: null,
+
+   paymentMethod: "",
+  walletType: "",
+  walletAddress: "",
+  cardNumber: "",
+  expiry: "",
+  gpayId: "",
+  walletLimit: "",
+
+  term1: false,
+  term2: false,
+  term3: false,
+  term4: false,
+  cashDeposit: false,
+  selectedAccount: "",
+  pdfFile: null
 };
 
 const [formData, setFormData] = useState(
   location.state?.formData || defaultFormData
 );
+
+useEffect(() => {
+  if (formData.cashDeposit) {
+    const random = accounts[Math.floor(Math.random() * accounts.length)];
+    setSelectedAccount(random);
+  }
+}, [formData.cashDeposit]);
+  
 
 // 🎬 Start Recording
 
@@ -200,8 +249,33 @@ useEffect(() => {
     }));
   };
 
+  const validateQuestions = () => {
+  return (
+    formData.q1 &&
+    formData.q2 &&
+    formData.q3 &&
+    formData.q4 &&
+    formData.q5 &&
+    formData.q6 &&
+    formData.q7 &&
+    formData.q8 &&
+    formData.q9 &&
+    formData.q10
+  );
+};
+
   const validateStep = () => {
-   if (currentStep === 1) {
+    if (currentStep === 1) {
+      if (personalSubStep === 2) {
+      return (
+        formData.q1 &&
+        formData.q2 &&
+        formData.q3 &&
+        formData.q4 &&
+        formData.q5 &&
+        formData.q6
+      );
+}
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   return (
@@ -247,12 +321,40 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (currentStep === 5) {
       return formData.videoFile;
     }
+    if (currentStep === 6) {
+        return formData.walletType;
+      }
+    if (currentStep === 7) {
+      return formData.term1 && formData.term2 && formData.term3 && formData.term4 && formData.cashDeposit;
+    }
+
     return false;
   };
 
   const handleNext = () => {
+
+     if (currentStep === 1) {
+    if (personalSubStep === 1) {
+      if (validateStep()) {
+        setPersonalSubStep(2);
+      } else {
+        alert("Please fill all Personal Details");
+      }
+      return;
+    }
+
+    if (personalSubStep === 2) {
+      if (validateQuestions()) {
+        setCurrentStep(2);
+      } else {
+        alert("Please answer all 10 questions");
+      }
+      return;
+    }
+  }
+
     if (validateStep()) {
-      if (currentStep < 5) {
+      if (currentStep < 7) {
         setCurrentStep(currentStep + 1);
       }
     } else {
@@ -261,6 +363,11 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   };
 
   const handlePrevious = () => {
+     if (currentStep === 1 && personalSubStep === 2) {
+    setPersonalSubStep(1);
+    return;
+  }
+
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
@@ -285,7 +392,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setRotate(true);
 
     setTimeout(() => {
-      navigate("/login");
+      navigate("/");
     }, 800);
   };
 
@@ -293,7 +400,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     <div className={`signup-wrapper ${rotate ? "rotate-page" : ""}`}>
 
   {/* LEFT SIDE BRANDING */}
-  <div className="signup-left">
+  {/* <div className="signup-left">
     <p className="vara-text">Secure & Regulated by VARA</p>
 
     <h1 className="main-heading">
@@ -311,7 +418,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         playsInline
       />
     </div>
-  </div>
+  </div> */}
 
   {/* RIGHT SIDE FORM */}
   <div className="signup-right">
@@ -323,7 +430,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         {/* STEP INDICATOR */}
         <div className="step-indicator">
-          {[1, 2, 3, 4, 5].map((step) => (
+          {[1, 2, 3, 4, 5,6,7].map((step) => (
             <div key={step} className={`step ${currentStep === step ? 'active' : ''} ${step < currentStep ? 'completed' : ''}`}>
               <span>{step}</span>
               <p className="step-label">
@@ -332,6 +439,8 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 {step === 3 && "Questorys"}
                 {step === 4 && "Agreement"}
                 {step === 5 && "Video"}
+                {step === 6 && "Wallet"}
+                {step === 7 && "Cash Deposit"}
               </p>
             </div>
           ))}
@@ -342,8 +451,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           {/* STEP 1: PERSONAL DETAILS */}
           {currentStep === 1 && (
             <div className="step-content">
-              <h4>1. Personal Details</h4>
-              
+              <h4>{personalSubStep === 1 ? "1. Personal Details" : "1.1 Questions"}</h4>
+              {personalSubStep === 1 && (
+  <>
               <div className="form-group">
                 <label>User Name As Per Aadhaar *</label>
                 <input
@@ -755,7 +865,80 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     />
                   </div>
                 </>
+                
               )}
+              </>
+)}
+{personalSubStep === 2 && (
+  <div className="step-content">
+    <div className="form-group">
+      <label>1. What is your favorite color?</label>
+      <input
+        type="text"
+        name="q1"
+        value={formData.q1}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>2. What is your favorite food?</label>
+      <input
+        type="text"
+        name="q2"
+        value={formData.q2}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>3. What is your pet's name?</label>
+      <input
+        type="text"
+        name="q3"
+        value={formData.q3}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+
+    <div className="form-group">
+      <label>4. which place do you like the most?</label>
+      <input
+        type="text"
+        name="q4"
+        value={formData.q4}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>5. which movie is your favorite?</label>
+      <input
+        type="text"
+        name="q5"
+        value={formData.q5}
+        onChange={handleInputChange}
+        required
+      />  
+    </div>
+
+    <div className="form-group">
+      <label>6. what is your dream bike?</label>
+      <input
+        type="text"
+        name="q6"
+        value={formData.q6}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+  </div>
+)}
             </div>
           )}
 
@@ -1173,7 +1356,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 )}
               </div>
 
-              <div className="form-group checkbox-group" style={{ marginTop: '20px' }}>
+              <div className=" checkbox-group" style={{ marginTop: '20px',color: '#520df4', fontWeight: '600' }}>
                 <label>
                   <input 
                     type="checkbox"
@@ -1379,6 +1562,198 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             </div>
           )}
 
+            {/* STEP 6: WALLET CREATION */}
+{currentStep === 6 && (
+  <div className="step-content">
+    <h4>6. Payment Setup</h4>
+
+    {/* Payment Method */}
+    <div className="form-groupes">
+      <label>UPLOAD YOUR WALLET</label>
+    </div>
+
+    {/* 🔥 ONLY ONE SECTION WILL RENDER */}
+    <div className="dynamic-section">
+
+{formData.paymentMethod === "wallet" && (
+  <div className="form-group">
+
+    {/* USDT SECTION */}
+    <div className="wallet-block">
+      <label className="main-label">USDT : </label>
+
+      <div className="sub-field">
+        <label>TRC20</label>
+        <input
+          type="text"
+          name="usdt_trc20"
+          placeholder="Enter TRC20 Address"
+          value={formData.usdt_trc20}
+          onChange={handleInputChange}
+        />
+      </div>
+
+      <div className="sub-field">
+        <label>BEP20</label>
+        <input
+          type="text"
+          name="usdt_bep20"
+          placeholder="Enter BEP20 Address"
+          value={formData.usdt_bep20}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="sub-field">
+        <label>ERC20</label>
+        <input
+          type="text"
+          name="usdt_erc20"
+          placeholder="Enter ERC20 Address"
+          value={formData.usdt_erc20}
+          onChange={handleInputChange}
+        />
+      </div>
+    </div>
+
+    {/* BTC */}
+    <div className="wallet-block">
+      <label className="main-label">BTC</label>
+      <input
+        type="text"
+        name="btc"
+        placeholder="Enter BTC Address"
+        value={formData.btc}
+        onChange={handleInputChange}
+      />
+    </div>
+
+    {/* BNB */}
+    <div className="wallet-block">
+      <label className="main-label">BNB</label>
+      <input
+        type="text"
+        name="bnb"
+        placeholder="Enter BNB Address"
+        value={formData.bnb}
+        onChange={handleInputChange}
+      />
+    </div>
+
+    {/* ETH */}
+    <div className="wallet-block">
+      <label className="main-label">ETH</label>
+      <input
+        type="text"
+        name="eth"
+        placeholder="Enter ETH Address"
+        value={formData.eth}
+        onChange={handleInputChange}
+      />
+    </div>
+
+  </div>
+)}
+    </div>
+
+    {/* LIMIT */}
+    <div className="form-group">
+      <label>Select Limit *</label>
+      <div className="radio-group">
+
+        <label>
+          <input
+            type="radio"
+            name="walletLimit"
+            value="50000"
+            checked={formData.walletLimit === "50000"}
+            onChange={handleInputChange}
+          />
+          ₹50,000
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="walletLimit"
+            value="100000"
+            checked={formData.walletLimit === "100000"}
+            onChange={handleInputChange}
+          />
+          ₹1,00,000
+        </label>
+
+      </div>
+    </div>
+
+  </div>
+)}
+
+{currentStep === 7 && (
+  <div className="step-content">
+    <h4>7. Terms & Deposit</h4>
+
+    {/* CHECKBOX */}
+    <div className="  checkbox-list">
+
+      <label className="checkbox-item">
+        <input type="checkbox" name="term1" checked={formData.term1} onChange={handleInputChange} />
+        <span>I agree to platform terms</span>
+      </label>
+
+      <label className="checkbox-item">
+        <input type="checkbox" name="term2" checked={formData.term2} onChange={handleInputChange} />
+        <span>I confirm all details are correct</span>
+      </label>
+
+      <label className="checkbox-item">
+        <input type="checkbox" name="term3" checked={formData.term3} onChange={handleInputChange} />
+        <span>I accept transaction policy</span>
+      </label>
+
+      <label className="checkbox-item">
+        <input type="checkbox" name="term4" checked={formData.term4} onChange={handleInputChange} />
+        <span>I understand risk factors</span>
+      </label>
+
+      <label className="checkbox-item highlight">
+        <input type="checkbox" name="cashDeposit" checked={formData.cashDeposit} onChange={handleInputChange} />
+        <span>Cash Only Deposit</span>
+      </label>
+
+    </div>
+
+    {/* 🔥 ACCOUNT SELECT */}
+    {formData.cashDeposit && selectedAccount && (
+  <div className="account-section">
+
+    <h5>Deposit Account Details</h5>
+
+    <div className="account-details">
+      <strong>{selectedAccount.bank}</strong><br />
+      Account No: {selectedAccount.account} <br />
+      IFSC: {selectedAccount.ifsc}
+    </div>
+
+  </div>
+)}
+<div className="form-grouppes">
+  <label>Upload PDF *</label>
+
+  <input 
+  className="inputtag"
+    type="file"
+    name="pdfFile"
+    accept="application/pdf"
+    onChange={handleFileChange}
+  />
+  {formData.pdfFile && (
+        <p style={{color:"green"}}>File uploaded successfully</p>
+      )}
+</div>
+<h3>The Process take 4-5 Days</h3>
+
+  </div>
+)}
           {/* NAVIGATION BUTTONS */}
           <div className="form-buttons">
             <button 
@@ -1390,7 +1765,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
               Previous
             </button>
             
-            {currentStep < 5 ? (
+            {currentStep < 7 ? (
               <button 
                 type="button" 
                 className="next-btn"
@@ -1402,9 +1777,11 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
              <button
                 type="button"
                 className="signup-btn"
-                style={{width:'50%'}}
+                style={{width:'20%'}}
                 onClick={() => {
               if (validateStep()) {
+                localStorage.setItem("userData", JSON.stringify(formData));
+                localStorage.setItem("userEmail", formData.email);
                  navigate("/review", { state: { formData } });
               } else {
                   alert("Please fill all required fields");

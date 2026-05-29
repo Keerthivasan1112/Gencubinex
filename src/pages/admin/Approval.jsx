@@ -18,16 +18,12 @@ function Approved() {
   const [dark, setDark] = useState(true);
   const [collapsed, setCollapsed] = useState(true);
   const [showApprovalPanel, setShowApprovalPanel] = useState(false);
+  const [filePopup, setFilePopup] = useState(null);
 
   const [adminUser, setAdminUser] = useState({
     name: "Admin 1",
     role: "master",
   });
-  const [showFilePopup, setShowFilePopup] = useState(false);
-const [selectedFile, setSelectedFile] = useState({
-  path: "",
-  name: "",
-});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -89,16 +85,16 @@ const [selectedFile, setSelectedFile] = useState({
   const loadApprovedUsers =  async () => {
     const res = await fetch("https://localhost:7085/api/coin/approved");
     const data = await res.json();
-    const approvedUsers = data.filter(
-      (user) => user.status === "Approved"
-    );
+    // const approvedUsers = data.filter(
+    //   (user) => user.status === "Approved"
+    // );
     setApprovedList(data);
   };
 
   const loadPendingUsers = () => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const pending = users.filter((user) => user.status === "Pending");
-    setPendingUsers(pending);
+   // const pending = users.filter((user) => user.status === "Pending");
+   // setPendingUsers(pending);
   };
 
   useEffect(() => {
@@ -173,19 +169,22 @@ reason: '',
     loadPendingUsers();
   };
 
-  const openFilePopup = (path, name) => {
-    debugger;
+
+const openFilePopup = (path, name) => {
   if (!path) {
-    alert("No file found");
+    alert("No file");
     return;
   }
 
-  setSelectedFile({
-    path,
-    name,
-  });
+  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(path)}`;
 
-  setShowFilePopup(true);
+  const ext = name.split(".").pop().toLowerCase();
+
+  setFilePopup({
+    url: fileUrl,
+    name,
+    type: ext,
+  });
 };
 
   return (
@@ -387,61 +386,66 @@ reason: '',
       <div className="all-details-right">
         <h4>📂 Documents</h4>
 
-        <p  onClick={() => openFilePopup(activeUser.aadharPhotoPath, "Aadhaar")}>📄 Aadhaar</p>
-        <p onClick={() => openFilePopup(activeUser.panCardPath, "PAN")}>📄 PAN</p>
-        <p onClick={() => openFilePopup(activeUser.bankStatementPath, "Bank Statement")}>📄 Bank Statement</p>
-        <p onClick={() => openFilePopup(activeUser.sourceOfFundPath, "Source Of Fund")}>📄 Source Of Fund</p>
-        <p onClick={() => openFilePopup(activeUser.sourceOfWealthPath, "Source Of Wealth")}>📄 Source Of Wealth</p>
-        <p onClick={() => openFilePopup(activeUser.addressVerificationPath, "Address Verification")}>
+        <p onClick={() =>  openFilePopup(activeUser.aadharPhotoPath, "Aadhar.pdf")}>📄 Aadhaar</p>
+        <p onClick={() => openFilePopup(activeUser.panCardPath, "PAN.pdf")}>📄 PAN</p>
+        <p onClick={() => openFilePopup(activeUser.bankStatementPath, "Bank.pdf")}>📄 Bank Statement</p>
+        <p onClick={() => openFilePopup(activeUser.sourceOfFundPath, "Fund.pdf")}>📄 Source Of Fund</p>
+        <p onClick={() => openFilePopup(activeUser.sourceOfWealthPath, "Wealth.pdf")}>📄 Source Of Wealth</p>
+        <p onClick={() => openFilePopup(activeUser.addressVerificationPath, "AddressProof.pdf")}>
           📄 Address Verification
         </p>
-        <p onClick={() => openFilePopup(activeUser.agreementPDFPath, "Agreement PDF")}>
+        <p onClick={() => openFilePopup(activeUser.agreementPDFPath, "Agreement.pdf")}>
           📄 Agreement PDF
         </p>
 
         {activeUser.maritalStatus === "married" && (
           <>
-            <p onClick={() => openFilePopup(activeUser.spouseAadharPhotoPath, "Spouse Aadhaar")}>
+            <p onClick={() => openFilePopup(activeUser.spouseAadharPhotoPath, "SpouseAadharCard.pdf")}>
               📄 Spouse Aadhaar
             </p>
-            <p onClick={() => openFilePopup(activeUser.spousePanCardPath, "Spouse PAN")}>
+            <p onClick={() => openFilePopup(activeUser.spousePanCardPath, "SpousePanCard.pdf")}>
               📄 Spouse PAN
             </p>
           </>
         )}
 
         <h4>🎥 Video KYC</h4>
-         <p onClick={() => openFilePopup(activeUser.videoPath, "Video")}>🎥 Video</p>
+         <p onClick={() => openFilePopup(activeUser.videoPath, "Video.mp4")}>
+  🎥 Video
+</p>
       </div>
     </div>
   </div>
 )}
-{showFilePopup && (
+{filePopup && (
   <div className="file-popup-overlay">
     <div className="file-popup">
-
-      <div className="file-popup-top">
-        <h3>{selectedFile.name}</h3>
+      <div className="file-popup-header">
+        <h3>{filePopup.name}</h3>
 
         <button
-          className="close-popup-btn"
-          onClick={() => setShowFilePopup(false)}
+          className="file-close-btn"
+          onClick={() => setFilePopup(null)}
         >
-          ✕
+          ✖
         </button>
       </div>
 
-      {/* PDF / File Preview */}
-      <iframe
-        src={`https://localhost:7085/api/coin/file?path=${selectedFile.path}`}
-        title="File Preview"
-        className="file-preview"
-      ></iframe>
-
+      <div className="file-popup-body">
+        {filePopup.type === "pdf" ? (
+          <iframe
+            src={filePopup.url}
+            title={filePopup.name}
+          />
+        ) : filePopup.type === "mp4" || filePopup.type === "webm" ? (
+          <video src={filePopup.url} controls />
+        ) : (
+          <img src={filePopup.url} alt={filePopup.name} />
+        )}
+      </div>
     </div>
   </div>
 )}
-
         </div>
       </div>
     </div>

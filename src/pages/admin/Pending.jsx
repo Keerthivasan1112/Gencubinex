@@ -19,6 +19,12 @@ function Pending() {
   const [dark, setDark] = useState(true);
   const [showApprovalPanel, setShowApprovalPanel] = useState(false);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [filePopup, setFilePopup] = useState({
+  show: false,
+  url: "",
+  title: "",
+  type: "",
+});
 
   const [adminUser, setAdminUser] = useState({
     name: "Admin 1",
@@ -131,17 +137,24 @@ function Pending() {
     }
   };
 
-  const downloadFile = (path, name) => {
-    debugger;
+const downloadFile = (path, name) => {
   if (!path) {
     alert("No file");
     return;
   }
 
-  window.open(
-    `https://localhost:7085/api/coin/file?path=${path}&name=${name}`,
-    "_blank"
-  );
+  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(
+    path
+  )}&name=${encodeURIComponent(name)}`;
+
+  const ext = name.split(".").pop().toLowerCase();
+
+  setFilePopup({
+    show: true,
+    url: fileUrl,
+    title: name,
+    type: ext,
+  });
 };
 
   const openFile = (fileUrl) => {
@@ -445,7 +458,9 @@ reason: '',
 
         <h4>🎥 Video KYC</h4>
 
-          <p onClick={() => downloadFile(selectedUser.videoPath, "Video.mp4" ? "Recorded" : "Not Recorded")}>🎥 Video</p>
+         <p onClick={() => downloadFile(selectedUser.videoPath, "Video.mp4")}>
+  🎥 Video
+</p>
       </div>
     </div>
   </div>
@@ -455,52 +470,33 @@ reason: '',
           
         </div>
       </div>
-      {showRejectPopup && (
-  <div className="reject-popup-overlay">
-    <div className="reject-popup">
-      <div className="reject-popup-header">
-        <h3>❌ Reject User</h3>
-
+     {filePopup.show && (
+  <div className="file-popup-overlay">
+    <div className="file-popup">
+      <div className="file-popup-header">
+        <h3>{filePopup.title}</h3>
         <button
-          className="reject-close-btn"
-          onClick={() => {
-            setShowRejectPopup(false);
-            setRejectReason("");
-          }}
+          onClick={() =>
+            setFilePopup({ show: false, url: "", title: "", type: "" })
+          }
         >
           ✕
         </button>
       </div>
 
-      <p className="reject-popup-subtitle">
-        Please enter the rejection reason for{" "}
-        <b>{selectedUser?.pageName || selectedUser?.name || "User"}</b>
-      </p>
-
-      <textarea
-        className="reject-popup-textarea"
-        placeholder="Enter rejection reason..."
-        value={rejectReason}
-        onChange={(e) => setRejectReason(e.target.value)}
-      />
-
-      <div className="reject-popup-actions">
-        <button
-          className="reject-cancel-btn"
-          onClick={() => {
-            setShowRejectPopup(false);
-            setRejectReason("");
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          className="reject-confirm-btn"
-          onClick={confirmReject}
-        >
-          Confirm Reject
-        </button>
+      <div className="file-popup-body">
+        {filePopup.type === "pdf" ? (
+          <iframe
+            src={filePopup.url}
+            title={filePopup.title}
+            width="100%"
+            height="100%"
+          />
+        ) : filePopup.type === "mp4" || filePopup.type === "webm" ? (
+          <video src={filePopup.url} controls width="100%" />
+        ) : (
+          <img src={filePopup.url} alt={filePopup.title} />
+        )}
       </div>
     </div>
   </div>

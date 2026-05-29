@@ -5,22 +5,31 @@ import logo from "../assets/logovi.mp4";
 
 
 const securityQuestions = [
-  { key: "q1", question: "What is your favorite color?" },
-  { key: "q2", question: "What is your favorite food?" },
-  { key: "q3", question: "What is your pet's name?" },
-  { key: "q4", question: "Which place do you like the most?" },
-  { key: "q5", question: "Which movie is your favorite?" },
-  { key: "q6", question: "What is your dream bike?" },
+  { key: "Q1", question: "What is your favorite color?" },
+  { key: "Q2", question: "What is your favorite food?" },
+  { key: "Q3", question: "What is your pet's name?" },
+  { key: "Q4", question: "Which place do you like the most?" },
+  { key: "Q5", question: "Which movie is your favorite?" },
+  { key: "Q6", question: "What is your dream bike?" },
+  { key: "Q7", question: " What is your childhood nickname?" },
+  { key: "Q8", question: "What was your first school name?" },
+  { key: "Q9", question: "What is your dream job?" },
+  { key: "Q10", question: "What city were you born in?" },
+  { key: "Q11", question: "Who is your favorite teacher?" },
+  { key: "Q12", question: "What is your best friend's name?" },
+  { key: "Q13", question: " What is your best friend's name?" },
+  { key: "Q14", question: " What is your favorite game?" },
+  { key: "Q15", question: " What was your first vehicle?" },
 ];
 
 function ForgotPassword() {
   const [step, setStep] = useState("email");
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [randomQuestions, setRandomQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [newPassword, setNewPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
+  const [Password, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (value, index) => {
@@ -48,7 +57,22 @@ const [confirmPassword, setConfirmPassword] = useState("");
       }
     }
   };
-  const generateRandomQuestions = () => {
+  const generateRandomQuestions = async () => {
+const finalOtp = otp.join("");
+debugger;
+  const res = await fetch("https://localhost:7085/api/signin/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp: finalOtp }),
+  });
+
+  const data = await res.text();
+
+  
+if(data =="Invalid or Expired OTP") {
+   return alert(data);
+  }
+
     const shuffled = [...securityQuestions].sort(() => 0.5 - Math.random());
     setRandomQuestions(shuffled.slice(0, 3));
     setAnswers({});
@@ -62,59 +86,80 @@ const [confirmPassword, setConfirmPassword] = useState("");
     }));
   };
 
-  const verifySecurityAnswers = () => {
-//     const savedUser = JSON.parse(localStorage.getItem("userData"));
+   const handleForgot = async () => {
+  if (!email ) {
+    alert("Please enter the email");
+    return;
+  }
+debugger;
+  const res = await fetch("https://localhost:7085/api/signin/forgotemailotp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
 
-//     if (!savedUser) {
-//       alert("User data not found");
-//       return;
-//     }
+  const data = await res.text();
 
-//     if (savedUser.email !== email) {
-//       alert("Email does not match");
-//       return;
-//     }
+  if (data === "OTP Sent") {
+    setStep("otp");
+  } else {
+    alert(data);
+  }
+};
 
-//     const isCorrect = randomQuestions.every((q) => {
-//       return (
-//         savedUser[q.key]?.toLowerCase().trim() ===
-//         answers[q.key]?.toLowerCase().trim()
-//       );
-//     });
+  const verifySecurityAnswers = async () => {
 
-//     if (isCorrect) {
-// if (isCorrect) {
-//   setStep("reset");
-// }
-//     } else {
-//       alert("Security answers are wrong");
-//     }
-setStep("reset");
-  };
+  const res = await fetch("https://localhost:7085/api/signin/verify-security-answers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      answers,
+    }),
+  });
 
-  const handleResetPassword = () => {
-  if (!newPassword || !confirmPassword) {
+  const data = await res.text();
+
+  if (data === "Security Answers Verified") {
+    setStep("reset");
+  } else {
+    alert(data);
+  }
+};
+
+  const handleResetPassword = async () => {
+  if (!Password || !confirmPassword) {
     alert("Please fill all fields");
     return;
   }
 
-  if (newPassword !== confirmPassword) {
+  if (Password !== confirmPassword) {
     alert("Password does not match");
     return;
   }
 
-  const savedUser = JSON.parse(localStorage.getItem("userData"));
-
-  const updatedUser = {
-    ...savedUser,
-    password: newPassword,
-    confirmPassword: confirmPassword,
-  };
-
-  localStorage.setItem("userData", JSON.stringify(updatedUser));
-
-  alert("Password updated successfully");
+  const res = await fetch("https://localhost:7085/api/signin/PasswordForgot", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      Password,
+    }),
+  });
+const data = await res.text();   
+   if (data === "Password") {
+    alert("Password updated successfully");
   navigate("/");
+  } else {
+    alert("Password not updated");
+  }
+
+
+  
 };
 
 
@@ -154,7 +199,7 @@ setStep("reset");
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-              <button disabled={!email} onClick={() => setStep("otp")}>
+              <button disabled={!email} onClick={handleForgot}>
                 Generate OTP
               </button>
             </>
@@ -186,7 +231,7 @@ setStep("reset");
               </div>
 
               <button
-                disabled={otp.join("").length !== 6}
+                disabled={otp.join("").length !== 5}
                 onClick={generateRandomQuestions}
               >
                 Verify & Continue
@@ -199,16 +244,16 @@ setStep("reset");
                 Answer these 3 security questions
               </p>
 
-              {randomQuestions.map((q, index) => (
-                <div className="form-group" key={q.key}>
+              {randomQuestions.map((Q, index) => (
+                <div className="form-group" key={Q.key}>
                   <label>
-                    {index + 1}. {q.question}
+                    {index + 1}. {Q.question}
                   </label>
                   <input
                     type="text"
-                    value={answers[q.key] || ""}
+                    value={answers[Q.key] || ""}
                     onChange={(e) =>
-                      handleAnswerChange(q.key, e.target.value)
+                      handleAnswerChange(Q.key, e.target.value)
                     }
                     required
                   />
@@ -216,7 +261,7 @@ setStep("reset");
               ))}
 
               <button
-                disabled={randomQuestions.some((q) => !answers[q.key])}
+                disabled={randomQuestions.some((Q) => !answers[Q.key])}
                 onClick={verifySecurityAnswers}
               >
                 Verify Answers
@@ -233,7 +278,7 @@ setStep("reset");
       <input
         type="password"
         placeholder="Enter new password"
-        value={newPassword}
+        value={Password}
         onChange={(e) => setNewPassword(e.target.value)}
       />
     </div>
@@ -249,7 +294,7 @@ setStep("reset");
     </div>
 
     <button
-      disabled={!newPassword || !confirmPassword}
+      disabled={!Password || !confirmPassword}
       onClick={handleResetPassword}
     >
       Update Password

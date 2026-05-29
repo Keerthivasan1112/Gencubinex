@@ -222,63 +222,70 @@ border-color: rgba(34, 197, 94, 0.45);
 
 
 
+
+
 .file-popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 99999;
-  backdrop-filter: blur(6px);
 }
 
 .file-popup {
-  width: 90%;
-  height: 90vh;
+  width:100%;
+  height: 100%;
   background: #0f172a;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  animation: popupShow 0.25s ease;
+  margin-left: 60%;
 }
 
-.file-popup-top {
-  height: 65px;
-  background: linear-gradient(90deg, #111827, #1e293b);
+.file-popup-header {
+  height: 55px;
+  padding: 0 18px;
+  background: #1e293b;
+  color: white;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  color: white;
+  align-items: center;
 }
 
-.close-popup-btn {
-  background: red;
+.file-close-btn {
+  background: #ef4444;
   color: white;
   border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+  padding: 7px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
 }
 
-.file-preview {
-  width: 100%;
-  height: calc(90vh - 65px);
-  border: none;
+.file-popup-body {
+  height: calc(100% - 55px);
   background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes popupShow {
-  from {
-    transform: scale(0.85);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+.file-popup-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.file-popup-body img,
+.file-popup-body video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.file-popup-body video {
+  width: 100%;
+  height: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  background: #000;
 }

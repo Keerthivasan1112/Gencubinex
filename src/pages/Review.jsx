@@ -138,8 +138,10 @@ const handleConfirm = async () => {
         </div>  
 
         <h3>Review & Confirm</h3>
+        <div className="review-two-column">
 
-        <div className="review-section">
+
+         <div className="review-left">
           <h4>Personal Details</h4>
             <div className="review-grid">
                 <div>Name</div>
@@ -205,21 +207,74 @@ const handleConfirm = async () => {
                     <div>{formData.spouseAadharNumber}</div>
 
                     <div>Spouse's Aadhar PDF</div>
-                    <div>{formData.spouseAadharDoc ? "Uploaded" : "Not Uploaded"}</div>
+                    <div>{formData.spouseAadharPhoto ? "Uploaded" : "Not Uploaded"}</div>
 
                     <div>Spouse's Pancard Number</div>
                     <div>{formData.spousePanNumber}</div>
 
                     <div>Spouse's Pancard PDF</div>
-                    <div>{formData.spousePanDoc ? "Uploaded" : "Not Uploaded"}</div>
+                    <div>{formData.spousePanCard ? "Uploaded" : "Not Uploaded"}</div>
                   </>   
                 )}
                 
             </div>
         </div>
 
-        <div className="review-section">
-          <h4>Bank Details</h4>
+         <div className="review-left">
+  <h4>Security Questions</h4>
+
+  <div className="review-grid">
+
+    <div>1. Favorite Color</div>
+    <div>{formData.q1}</div>
+
+    <div>2. Favorite Food</div>
+    <div>{formData.q2}</div>
+
+    <div>3. Pet Name</div>
+    <div>{formData.q3}</div>
+
+    <div>4. Favorite Place</div>
+    <div>{formData.q4}</div>
+
+    <div>5. Favorite Movie</div>
+    <div>{formData.q5}</div>
+
+    <div>6. Dream Bike</div>
+    <div>{formData.q6}</div>
+
+    <div>7. Childhood Nickname</div>
+    <div>{formData.q7}</div>
+
+    <div>8. First School Name</div>
+    <div>{formData.q8}</div>
+
+    <div>9. Dream Job</div>
+    <div>{formData.q9}</div>
+
+    <div>10. Birth City</div>
+    <div>{formData.q10}</div>
+
+    <div>11. Favorite Teacher</div>
+    <div>{formData.q11}</div>
+
+    <div>12. Best Friend</div>
+    <div>{formData.q12}</div>
+
+    <div>13. Another Best Friend</div>
+    <div>{formData.q13}</div>
+
+    <div>14. Favorite Game</div>
+    <div>{formData.q14}</div>
+
+    <div>15. First Vehicle</div>
+    <div>{formData.q15}</div>
+
+  </div>
+</div>
+
+          <div className="review-left">
+            <h4>Bank Details</h4>
           <div className="review-grid">
 
                 <div>Account Holder Name</div>
@@ -233,20 +288,47 @@ const handleConfirm = async () => {
 
                 <div>IFSC Code</div>
                 <div>{formData.ifscCode}</div>
+
+                <div>Bank Statement PDF</div>
+                <div>{formData.bankStatement ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Source of Fund PDF</div>
+                <div>{formData.sourceOfFund ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Source of Wealth PDF</div>
+                 <div>{formData.sourceOfWealth ? "Uploaded" : "Not Uploaded"}</div>
             </div>
 
         </div>
-        <div className="review-section">
+        <div className="review-left">
           <h4>questionry PDF</h4>
           <div className="review-grid">
 
                 <div>Address Verification PDF</div>
                 <div>{formData.addressVerificationDoc ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Declaration Undertake of complition and source of fund</div>
+                <div>{formData.declarationUndertak ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>AML,CFT and source fund (us for cropyt trading) decleartion</div>
+                <div>{formData.declarationUndertake ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Customer undertake king for link</div>
+                <div>{formData.customerUndertake ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Letter of ostiontion</div>
+                <div>{formData.declarationUnderta ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>Poicticaly expoes person (PEP) self decleartion</div>
+                <div>{formData.declarationUndertaking ? "Uploaded" : "Not Uploaded"}</div>
+
+                <div>GDPR Declaration</div>
+                <div>{formData.gdprDeclaration ? "Uploaded" : "Not Uploaded"}</div>
             </div>
 
         </div>
 
-        <div className="review-section">
+         <div className="review-right">
             <h4>Agreement</h4>
 
             <div className="review-grid">
@@ -255,7 +337,59 @@ const handleConfirm = async () => {
             </div>
 
         </div>
-<div className="review-section">
+ 
+
+ <div className="review-right">
+  <h4>Payment Setup</h4>
+
+  <div className="review-grid">
+    <div>USDT TRC20</div>
+    <div>{formData.usdt_trc20 || "Not Added"}</div>
+
+    <div>USDT BEP20</div>
+    <div>{formData.usdt_bep20 || "Not Added"}</div>
+
+    <div>USDT ERC20</div>
+    <div>{formData.usdt_erc20 || "Not Added"}</div>
+
+    <div>BTC Wallet</div>
+    <div>{formData.btc || "Not Added"}</div>
+
+    <div>BNB Wallet</div>
+    <div>{formData.bnb || "Not Added"}</div>
+
+    <div>ETH Wallet</div>
+    <div>{formData.eth || "Not Added"}</div>
+
+    <div>Selected Limit</div>
+    <div>{formData.walletLimit ? `₹${formData.walletLimit}` : "Not Selected"}</div>
+  </div>
+</div>
+
+   <div className="review-right">
+  <h4>Terms & Deposit</h4>
+
+  <div className="review-grid">
+    <div>Platform Terms</div>
+    <div>{formData.term1 ? "Accepted" : "Not Accepted"}</div>
+
+    <div>Details Confirmation</div>
+    <div>{formData.term2 ? "Accepted" : "Not Accepted"}</div>
+
+    <div>Transaction Policy</div>
+    <div>{formData.term3 ? "Accepted" : "Not Accepted"}</div>
+
+    <div>Risk Factors</div>
+    <div>{formData.term4 ? "Accepted" : "Not Accepted"}</div>
+
+    <div>Cash Only Deposit</div>
+    <div>{formData.cashDeposit ? "Selected" : "Not Selected"}</div>
+
+    <div>Deposit PDF</div>
+    <div>{formData.pdfFile ? "Uploaded" : "Not Uploaded"}</div>
+  </div>
+</div>
+<div className="review-right">
   <h4>Video KYC</h4>
 
   <div className="review-grid">
@@ -275,6 +409,8 @@ const handleConfirm = async () => {
   )}
 </div>
 
+
+
         <div className="review-buttons">
           <button className="edit-btn" onClick={handleEdit}>
             Edit Personal Details
@@ -286,6 +422,7 @@ const handleConfirm = async () => {
         </div>
 
       </div>
+    </div>
     </div>
   );
 }

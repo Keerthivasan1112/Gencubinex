@@ -75,8 +75,30 @@ const defaultFormData = {
   spousePanNumber: "",
   spousePanCard: null,
 
+   q1: "",
+  q2: "",
+  q3: "",
+  q4: "",
+  q5: "",
+  q6: "",
+  q7: "",
+  q8: "",
+  q9: "",
+  q10: "",
+  q11: "",
+  q12: "",
+  q13: "",
+  q14: "",
+  q15: "",
+
+
+
+
   addressVerificationDoc: null,
   declarationUndertak: null,
+  declarationUndertake: null,
+  declarationUnderta: null,
+  declarationUndertaking: null,
   customerUndertake: null,
   gdprDeclaration: null,
 
@@ -260,7 +282,12 @@ useEffect(() => {
     formData.q7 &&
     formData.q8 &&
     formData.q9 &&
-    formData.q10
+    formData.q10 &&
+    formData.q11 &&
+    formData.q12 &&
+    formData.q13 &&
+    formData.q14 &&
+    formData.q15
   );
 };
 
@@ -273,7 +300,16 @@ useEffect(() => {
         formData.q3 &&
         formData.q4 &&
         formData.q5 &&
-        formData.q6
+        formData.q6 &&
+        formData.q7 &&
+        formData.q8 &&
+        formData.q9 &&
+        formData.q10 &&
+        formData.q11 &&
+        formData.q12 &&
+        formData.q13 &&
+        formData.q14 &&
+        formData.q15
       );
 }
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -307,10 +343,17 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         formData.spousePanCard))
   );
 }
-    if (currentStep === 3) {
-      return formData.addressVerificationDoc && formData.declarationUndertak && formData.customerUndertake && formData.declarationUndertak && formData.customerUndertake && formData.declarationUndertak && formData.customerUndertake &&
-             formData.gdprDeclaration;
-    }
+   if (currentStep === 3) {
+  return (
+    formData.addressVerificationDoc &&
+    formData.declarationUndertak &&
+    formData.declarationUndertake &&
+    formData.customerUndertake &&
+    formData.declarationUnderta &&
+    formData.declarationUndertaking &&
+    formData.gdprDeclaration
+  );
+}
     if (currentStep === 2) {
       return formData.accountHolderName && formData.accountNumber && formData.confirmAccountNumber && formData.accountNumber === formData.confirmAccountNumber && formData.bankStatement && formData.sourceOfFund && formData.sourceOfWealth &&
              formData.ifscCode && formData.bankName;
@@ -322,7 +365,14 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return formData.videoFile;
     }
     if (currentStep === 6) {
-        return formData.walletType;
+         return (
+    formData.usdt_trc20 ||
+    formData.usdt_bep20 ||
+    formData.usdt_erc20 ||
+    formData.btc ||
+    formData.bnb ||
+    formData.eth
+  ) && formData.walletLimit;
       }
     if (currentStep === 7) {
       return formData.term1 && formData.term2 && formData.term3 && formData.term4 && formData.cashDeposit;
@@ -343,14 +393,14 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return;
     }
 
-    if (personalSubStep === 2) {
-      if (validateQuestions()) {
-        setCurrentStep(2);
-      } else {
-        alert("Please answer all 10 questions");
-      }
-      return;
-    }
+    // if (personalSubStep === 2) {
+    //   if (validateQuestions()) {
+    //     setCurrentStep(2);
+    //   } else {
+    //     alert("Please answer all 10 questions");
+    //   }
+    //   return;
+    // }
   }
 
     if (validateStep()) {
@@ -841,6 +891,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                       onChange={handleFileChange}
                       required
                     />
+                     {formData.spouseAadharPhoto && (
+                  <p className="file-name">✓ {formData.spouseAadharPhoto.name}</p>
+                )}
                   </div>
 
                   <div className="form-group">
@@ -863,6 +916,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                       onChange={handleFileChange}
                       required
                     />
+                     {formData.spousePanCard && (
+                  <p className="file-name">✓ {formData.spousePanCard.name}</p>
+                )}
                   </div>
                 </>
                 
@@ -937,6 +993,110 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         required
       />
     </div>
+
+    <div className="form-group">
+      <label>7. What is your childhood nickname?</label>
+      <input
+        type="text"
+        name="q7"
+        value={formData.q7}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>8. What was your first school name?</label>
+      <input
+        type="text"
+        name="q8"
+        value={formData.q8}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>9. What is your dream job?</label>
+      <input
+        type="text"
+        name="q9"
+        value={formData.q9}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>10. What city were you born in?</label>
+      <input
+        type="text"
+        name="q10"
+        value={formData.q10}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>11. Who is your favorite teacher?</label>
+      <input
+        type="text"
+        name="q11"
+        value={formData.q11}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+    
+
+     <div className="form-group">
+      <label>12. What is your best friend's name?</label>
+      <input
+        type="text"
+        name="q12"
+        value={formData.q12}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+    <div className="form-group">
+      <label>13. What is your best friend's name?</label>
+      <input
+        type="text"
+        name="q13"
+        value={formData.q13}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+
+    <div className="form-group">
+      <label>14. What is your favorite game?</label>
+      <input
+        type="text"
+        name="q14"
+        value={formData.q14}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+
+     <div className="form-group">
+      <label>15. What was your first vehicle?</label>
+      <input
+        type="text"
+        name="q15"
+        value={formData.q15}
+        onChange={handleInputChange}
+        required
+      />
+    </div>
+
+
   </div>
 )}
             </div>
@@ -945,7 +1105,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           {/* STEP 3: AGREEMENT */}
           {currentStep === 3 && (
             <div className="step-content">
-              <div style={{ display: 'flex', gap: '30px', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '30px', justifyContent: 'space-between' , }}>
                 
                 {/* LEFT SIDE - AGREEMENT */}
                 <div style={{ flex: 1 }}>
@@ -957,7 +1117,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                   {/* ADDRESS VERIFICATION */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>1. Address Verification</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left', color: '#000000' }}>1. Address Verification</label>
                       <input
                         type="file"
                         name="addressVerificationDoc"
@@ -967,7 +1127,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
                       {formData.addressVerificationDoc && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.addressVerificationDoc.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -992,7 +1152,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 {/* DECLARATION & UNDERTAKING */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>2. Declaration Undertake of complition and source of fund</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>2. Declaration Undertake of complition and source of fund</label>
                       <input
                         type="file"
                         name="declarationUndertak"
@@ -1002,7 +1162,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
                       {formData.declarationUndertak && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.declarationUndertak.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1026,17 +1186,17 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>3. AML,CFT and source fund (us for cropyt trading) decleartion</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>3. AML,CFT and source fund (us for cropyt trading) decleartion</label>
                       <input
                         type="file"
-                        name="declarationUndertak"
+                        name="declarationUndertake"
                         accept=".pdf"
                         onChange={handleFileChange}
                         required
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
-                      {formData.declarationUndertak && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      {formData.declarationUndertake && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.declarationUndertake.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1060,7 +1220,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>4. Customer undertake king for link</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>4. Customer undertake king for link</label>
                       <input
                         type="file"
                         name="customerUndertake"
@@ -1070,7 +1230,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
                       {formData.customerUndertake && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.customerUndertake.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1094,17 +1254,17 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>5. Letter of ostiontion</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>5. Letter of ostiontion</label>
                       <input
                         type="file"
-                        name="declarationUndertak"
+                        name="declarationUnderta"
                         accept=".pdf"
                         onChange={handleFileChange}
                         required
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
-                      {formData.declarationUndertak && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      {formData.declarationUnderta && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.declarationUnderta.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1128,17 +1288,17 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>6. Poicticaly expoes person (PEP) self decleartion</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>6. Poicticaly expoes person (PEP) self decleartion</label>
                       <input
                         type="file"
-                        name="declarationUndertak"
+                        name="declarationUndertaking"
                         accept=".pdf"
                         onChange={handleFileChange}
                         required
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
-                      {formData.declarationUndertak && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                      {formData.declarationUndertaking && (
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.declarationUndertaking.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1162,7 +1322,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '20px', marginBottom: '20px' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' }}>7. GDPR (General Data Protection Regulation)</label>
+                      <label style={{ fontWeight: '600', margin: 0, display: 'block', marginBottom: '8px',textAlign: 'left' ,color: '#000000' }}>7. GDPR (General Data Protection Regulation)</label>
                       <input
                         type="file"
                         name="gdprDeclaration"
@@ -1172,7 +1332,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         style={{ width: '100%', padding: '8px', fontSize: '12px' }}
                       />
                       {formData.gdprDeclaration && (
-                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded</p>
+                        <p style={{ color: '#689f38', marginTop: '8px', fontSize: '12px', textAlign: 'left' }}>✓ Uploaded {formData.gdprDeclaration.name}</p>
                       )}
                     </div>
                     <div style={{ flex: 0.3, display: 'flex', justifyContent: 'flex-end', paddingTop: '5px' }}>
@@ -1374,7 +1534,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
               </div>
               {showAgreementPopup && (
               <div className="popup-overlay">
-                <div className="popup-box">
+                <div className="popup-boxs">
                       <h3>Terms & Conditions</h3>
 
                     <div className="popup-content">
@@ -1574,13 +1734,10 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     {/* 🔥 ONLY ONE SECTION WILL RENDER */}
     <div className="dynamic-section">
-
-{formData.paymentMethod === "wallet" && (
   <div className="form-group">
 
-    {/* USDT SECTION */}
     <div className="wallet-block">
-      <label className="main-label">USDT : </label>
+      <label className="main-label">USDT :</label>
 
       <div className="sub-field">
         <label>TRC20</label>
@@ -1588,7 +1745,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           type="text"
           name="usdt_trc20"
           placeholder="Enter TRC20 Address"
-          value={formData.usdt_trc20}
+          value={formData.usdt_trc20 || ""}
           onChange={handleInputChange}
         />
       </div>
@@ -1599,61 +1756,58 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           type="text"
           name="usdt_bep20"
           placeholder="Enter BEP20 Address"
-          value={formData.usdt_bep20}
+          value={formData.usdt_bep20 || ""}
           onChange={handleInputChange}
         />
       </div>
+
       <div className="sub-field">
         <label>ERC20</label>
         <input
           type="text"
           name="usdt_erc20"
           placeholder="Enter ERC20 Address"
-          value={formData.usdt_erc20}
+          value={formData.usdt_erc20 || ""}
           onChange={handleInputChange}
         />
       </div>
     </div>
 
-    {/* BTC */}
     <div className="wallet-block">
       <label className="main-label">BTC</label>
       <input
         type="text"
         name="btc"
         placeholder="Enter BTC Address"
-        value={formData.btc}
+        value={formData.btc || ""}
         onChange={handleInputChange}
       />
     </div>
 
-    {/* BNB */}
     <div className="wallet-block">
       <label className="main-label">BNB</label>
       <input
         type="text"
         name="bnb"
         placeholder="Enter BNB Address"
-        value={formData.bnb}
+        value={formData.bnb || ""}
         onChange={handleInputChange}
       />
     </div>
 
-    {/* ETH */}
     <div className="wallet-block">
       <label className="main-label">ETH</label>
       <input
         type="text"
         name="eth"
         placeholder="Enter ETH Address"
-        value={formData.eth}
+        value={formData.eth || ""}
         onChange={handleInputChange}
       />
     </div>
 
   </div>
-)}
-    </div>
+</div>
 
     {/* LIMIT */}
     <div className="form-group">
@@ -1784,7 +1938,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 localStorage.setItem("userEmail", formData.email);
                  navigate("/review", { state: { formData } });
               } else {
-                  alert("Please fill all required fields");
+                  // alert("Please fill all required fields");
               }
             }}
               disabled={!validateStep() || !agreementChecked}

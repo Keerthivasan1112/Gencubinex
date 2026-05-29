@@ -55,7 +55,7 @@ function HistoryPage() {
     if (savedAdmin) setAdminUser(savedAdmin);
 
     const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    setPendingUsers(allUsers.filter((user) => user.status === "Pending"));
+    // setPendingUsers(allUsers.filter((user) => user.status === "Pending"));
   }, []);
 
   const handleMenuClick = (item) => {

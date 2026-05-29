@@ -17,6 +17,7 @@ function UserList() {
   const [dark, setDark] = useState(true);
   const [showApprovalPanel, setShowApprovalPanel] = useState(false);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [filePopup, setFilePopup] = useState(null);
 
   const [adminUser, setAdminUser] = useState({
     name: "Admin 1",
@@ -24,17 +25,21 @@ function UserList() {
   });
 
 
-    const downloadFile = (path, name) => {
-    debugger;
+const downloadFile = (path, name) => {
   if (!path) {
     alert("No file");
     return;
   }
 
-  window.open(
-    `https://localhost:7085/api/coin/file?path=${path}&name=${name}`,
-    "_blank"
-  );
+  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(path)}`;
+
+  const ext = name.split(".").pop().toLowerCase();
+
+  setFilePopup({
+    url: fileUrl,
+    name,
+    type: ext,
+  });
 };
 
 
@@ -384,11 +389,43 @@ function UserList() {
                       )}
 
                       <h4>🎥 Video KYC</h4>
-                  <p onClick={() => downloadFile(selectedUser.videoPath, "Video.mp4" ? "Recorded" : "Not Recorded")}>🎥 Video</p>
+                  <p onClick={() => downloadFile(selectedUser.videoPath, "Video.mp4")}>
+  🎥 Video
+</p>
                     </div>
                   </div>
                 </div>
               )}
+
+              {filePopup && (
+  <div className="file-popup-overlay">
+    <div className="file-popup">
+      <div className="file-popup-header">
+        <h3>{filePopup.name}</h3>
+
+        <button
+          className="file-close-btn"
+          onClick={() => setFilePopup(null)}
+        >
+          ✖
+        </button>
+      </div>
+
+      <div className="file-popup-body">
+        {filePopup.type === "pdf" ? (
+          <iframe
+            src={filePopup.url}
+            title={filePopup.name}
+          />
+        ) : filePopup.type === "mp4" || filePopup.type === "webm" ? (
+          <video src={filePopup.url} controls />
+        ) : (
+          <img src={filePopup.url} alt={filePopup.name} />
+        )}
+      </div>
+    </div>
+  </div>
+)}
             </div>
           </div>
         </div>

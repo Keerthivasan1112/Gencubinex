@@ -243,6 +243,7 @@ padding:15px;
 margin-top:20px;
 border-radius:8px;
 text-align:left;
+color:#000000;
 }
 
 /* BANK NOTE */
@@ -285,13 +286,14 @@ align-items:center;
 z-index:2000;
 }
 
-.popup-box{
+.popup-boxs{
 background:white;
 width:450px;
 padding:25px;
 border-radius:10px;
 max-height:80vh;
 overflow-y:auto;
+color:#000000;
 }
 
 /* POPUP CHECKBOX */
@@ -412,7 +414,9 @@ text-decoration: underline;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  color: #000000;
 }
+
 
 .checkbox-item {
   display: flex;
@@ -432,6 +436,7 @@ text-decoration: underline;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
+  color: #000000;
 }
 
 .checkbox-item input {

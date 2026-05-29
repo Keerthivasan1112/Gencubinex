@@ -40,7 +40,7 @@ function Login() {
     return;
   }
 debugger;
-  const res = await fetch("https://localhost:7085/api/signin/login", {
+  const res = await fetch("https://13.206.120.40:5299/api/signin/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -103,7 +103,7 @@ debugger;
 const handleVerifyOtp = async () => {
   const finalOtp = otpValues.join("");
 
-  const res = await fetch("https://localhost:7085/api/signin/verify-otp", {
+  const res = await fetch("https://13.206.120.40:5299/api/signin/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp: finalOtp }),

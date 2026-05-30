@@ -78,7 +78,7 @@ const handleConfirm = async () => {
       data.append("SpousePanCard", formData.spousePanDoc);
 
     // ✅ API CALL
-     const res = await fetch("https://localhost:7085/api/signup/register", {
+     const res = await fetch("https://13.207.152.124:5299/api/signup/register", {
       method: "POST",
       body: data,
       headers: {

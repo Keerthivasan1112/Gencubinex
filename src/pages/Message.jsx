@@ -95,7 +95,7 @@ function Message() {
   const loadInbox = async () => {
     try {
       const res = await fetch(
-        `https://localhost:7085/api/message/inbox/${loginEmail}`
+        `https://13.207.152.124:5299/api/message/inbox/${loginEmail}`
       );
 
       const data = await res.json();
@@ -113,7 +113,7 @@ function Message() {
   const loadSent = async () => {
     try {
       const res = await fetch(
-        `https://localhost:7085/api/message/sent/${loginEmail}`
+        `https://13.207.152.124:5299/api/message/sent/${loginEmail}`
       );
 
       const data = await res.json();
@@ -136,7 +136,7 @@ function Message() {
   const loginEmail = adminUser?.email;
 
   const res = await fetch(
-    `https://localhost:7085/api/message/drafts/${loginEmail}`
+    `https://13.207.152.124:5299/api/message/drafts/${loginEmail}`
   );
 
   const data = await res.json();
@@ -151,7 +151,7 @@ function Message() {
   const loadTrash = async () => {
     try {
       const res = await fetch(
-        `https://localhost:7085/api/message/trash/${loginEmail}`
+        `https://13.207.152.124:5299/api/message/trash/${loginEmail}`
       );
 
       const data = await res.json();
@@ -224,7 +224,7 @@ function Message() {
       }
 
       const response = await fetch(
-        "https://localhost:7085/api/message/send",
+        "https://13.207.152.124:5299/api/message/send",
         {
           method: "POST",
           headers: {
@@ -279,7 +279,7 @@ function Message() {
     return;
   }
 
-  await fetch("https://localhost:7085/api/message/send", {
+  await fetch("https://13.207.152.124:5299/api/message/send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -317,7 +317,7 @@ function Message() {
   try {
 
     const response = await fetch(
-      `https://localhost:7085/api/message/move-trash/${id}`,
+      `https://13.207.152.124:5299/api/message/move-trash/${id}`,
       {
         method: "PUT",
       }
@@ -350,7 +350,7 @@ function Message() {
 
     if (!item.isRead) {
       await fetch(
-        `https://localhost:7085/api/message/read/${item.id}`,
+        `https://13.207.152.124:5299/api/message/read/${item.id}`,
         {
           method: "PUT",
         }

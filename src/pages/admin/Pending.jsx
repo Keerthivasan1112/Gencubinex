@@ -77,7 +77,7 @@ function Pending() {
 
   const loadUsers =  async () => {
 
-  const res = await fetch("https://localhost:7085/api/coin/pending");
+  const res = await fetch("https://13.207.152.124:5299/api/coin/pending");
   const data = await res.json();
   const onlyPendingUsers = data.filter(
       (user) => user.status === "Pending"
@@ -143,7 +143,7 @@ const downloadFile = (path, name) => {
     return;
   }
 
-  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(
+  const fileUrl = `https://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(
     path
   )}&name=${encodeURIComponent(name)}`;
 
@@ -166,7 +166,7 @@ const downloadFile = (path, name) => {
   };
 
 const updateStatus = async (status) => {
-  await fetch("https://localhost:7085/api/coin/update-status", {
+  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -187,7 +187,7 @@ reason: '',
       return;
     }
 
-  await fetch("https://localhost:7085/api/coin/update-status", {
+  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

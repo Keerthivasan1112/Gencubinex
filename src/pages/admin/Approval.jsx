@@ -70,7 +70,7 @@ function Approved() {
 //   }
 
 //   window.open(
-//     `https://localhost:7085/api/coin/file?path=${path}&name=${name}`,
+//     `https://13.207.152.124:5299/api/coin/file?path=${path}&name=${name}`,
 //     "_blank"
 //   );
 // };
@@ -83,7 +83,7 @@ function Approved() {
   };
 
   const loadApprovedUsers =  async () => {
-    const res = await fetch("https://localhost:7085/api/coin/approved");
+    const res = await fetch("https://13.207.152.124:5299/api/coin/approved");
     const data = await res.json();
     // const approvedUsers = data.filter(
     //   (user) => user.status === "Approved"
@@ -151,7 +151,7 @@ function Approved() {
   };
 
 const updateStatus = async (status) => {
-  await fetch("https://localhost:7085/api/coin/update-status", {
+  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const openFilePopup = (path, name) => {
     return;
   }
 
-  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(path)}`;
+  const fileUrl = `https://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
 
   const ext = name.split(".").pop().toLowerCase();
 

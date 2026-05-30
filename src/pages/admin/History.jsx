@@ -37,7 +37,7 @@ function HistoryPage() {
 
 
    const loadOrders = async () => {
-  const res = await fetch("https://localhost:7085/api/coin/admin/all");
+  const res = await fetch("https://13.207.152.124:5299/api/coin/admin/all");
   const data = await res.json();
   setOrders(data);
 };

@@ -75,7 +75,7 @@ const downloadFile = (path, name) => {
     return;
   }
 
-  const fileUrl = `https://localhost:7085/api/coin/file?path=${encodeURIComponent(path)}`;
+  const fileUrl = `https://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
   const ext = name.split(".").pop().toLowerCase();
 
   setFilePopup({
@@ -87,7 +87,7 @@ const downloadFile = (path, name) => {
 
   const loadRejectedUsers = async () => {
     //const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const res = await fetch("https://localhost:7085/api/coin/rejected");
+    const res = await fetch("https://13.207.152.124:5299/api/coin/rejected");
     const data = await res.json();
     const rejected = data.filter((u) => u.status === "Rejected");
     setUsers(data);
@@ -153,7 +153,7 @@ const downloadFile = (path, name) => {
   };
 
 const updateStatus = async (status) => {
-  await fetch("https://localhost:7085/api/coin/update-status", {
+  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

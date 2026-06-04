@@ -79,7 +79,7 @@ const [filePopup, setFilePopup] = useState(null);
   
 
   const updateUserStatus = async (status) => {
-  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
+  await fetch("http://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const confirmReject = async () => {
     return;
   }
 
-  await fetch("https://13.207.152.124:5299/api/coin/update-status", {
+  await fetch("http://13.207.152.124:5299/api/coin/update-status", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -133,7 +133,7 @@ reason: '',
  // const data = JSON.parse(localStorage.getItem("users")) || [];
   
 
-  const res = await fetch("https://13.207.152.124:5299/api/coin/all");
+  const res = await fetch("http://13.207.152.124:5299/api/coin/all");
   //const validUsers = data.filter((user) => user && typeof user === "object");
   const data = await res.json();
 
@@ -266,7 +266,7 @@ reason: '',
     for (const user of messageTargetUsers) {
 
       const response = await fetch(
-        "https://13.207.152.124:5299/api/message/send",
+        "http://13.207.152.124:5299/api/message/send",
         {
           method: "POST",
           headers: {
@@ -326,7 +326,7 @@ reason: '',
     return;
   }
 
-  const fileUrl = `https://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
+  const fileUrl = `http://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
 
   const ext = name.split(".").pop().toLowerCase();
 
@@ -386,7 +386,7 @@ reason: '',
             {dark ? "🌙" : "☀️"}
           </div>
 
-          <div className="all-logout" onClick={() => navigate("/")}>
+          <div className="all-logout" onClick={() => navigate("/signin")}>
             Logout
           </div>
         </div>

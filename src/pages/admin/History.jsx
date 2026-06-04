@@ -37,7 +37,7 @@ function HistoryPage() {
 
 
    const loadOrders = async () => {
-  const res = await fetch("https://13.207.152.124:5299/api/coin/admin/all");
+  const res = await fetch("http://13.207.152.124:5299/api/coin/admin/all");
   const data = await res.json();
   setOrders(data);
 };
@@ -102,7 +102,7 @@ function HistoryPage() {
             {dark ? "🌙" : "☀️"}
           </div>
 
-          <div className="all-logout" onClick={() => navigate("/")}>
+          <div className="all-logout" onClick={() => navigate("/signin")}>
             Logout
           </div>
         </div>

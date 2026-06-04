@@ -36,7 +36,7 @@ function AdminLayout() {
 
 
 const loadPrices = async () => {
-  const res = await fetch("https://13.207.152.124:5299/api/coin");
+  const res = await fetch("http://13.207.152.124:5299/api/coin");
   const data = await res.json();
 
   let temp = {
@@ -137,13 +137,13 @@ useEffect(() => {
   ];
 
  const loadOrders = async () => {
-  const res = await fetch("https://13.207.152.124:5299/api/coin/admin/all");
+  const res = await fetch("http://13.207.152.124:5299/api/coin/admin/all");
   const data = await res.json();
   setOrders(data);
 };
 
 const loadPendingUsers = async () => {
-  const res = await fetch("https://13.207.152.124:5299/api/coin/pending");
+  const res = await fetch("http://13.207.152.124:5299/api/coin/pending");
   const data = await res.json();
   setPendingUsers(data);
 };
@@ -239,7 +239,7 @@ const handleSet = async (coin) => {
   }
 
   try {
-    await fetch("https://localhost:7085/api/coin/update", {
+    await fetch("http://localhost:7085/api/coin/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -269,7 +269,7 @@ const handleSet = async (coin) => {
 };
 
 const loadChart = async () => {
-  const res = await fetch("https://13.207.152.124:5299/api/coin");
+  const res = await fetch("http://13.207.152.124:5299/api/coin");
   const data = await res.json();
 
   let grouped = {
@@ -334,7 +334,7 @@ useEffect(() => {
             {dark ? "🌙" : "☀️"}
           </div>
 
-          <div className="logout-btn" onClick={() => navigate("/")}>
+          <div className="logout-btn" onClick={() => navigate("/signin")}>
             Logout
           </div>
         </div>

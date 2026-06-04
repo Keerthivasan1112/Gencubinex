@@ -442,7 +442,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setRotate(true);
 
     setTimeout(() => {
-      navigate("/");
+      navigate("/signin");
     }, 800);
   };
 

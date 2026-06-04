@@ -10,7 +10,7 @@ function Home() {
     const [showPopup, setShowPopup] = useState(false);
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/signin");
   };
 
   const handleJoinOTC = () => {
@@ -76,11 +76,11 @@ function Home() {
           <h1>
             Move Millions in Crypto with <br />
             Confidence <br />
-            <span className="highlight">INOCYX</span> OTC Made for you.
+            <span className="highlight">GenCubinEx</span> OTC Made for you.
           </h1>
 
           <p>
-            INOCYX delivers high-performance OTC and execution solutions 
+            GenCubinEx delivers high-performance OTC and execution solutions 
             tailored for private and institutional clients. With advanced 
             technology and professional service, we’re the trusted choice 
             for large-volume trades, secure settlements, and competitive pricing.

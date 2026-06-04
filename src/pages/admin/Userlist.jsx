@@ -31,7 +31,7 @@ const downloadFile = (path, name) => {
     return;
   }
 
-  const fileUrl = `https://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
+  const fileUrl = `http://13.207.152.124:5299/api/coin/file?path=${encodeURIComponent(path)}`;
 
   const ext = name.split(".").pop().toLowerCase();
 
@@ -86,7 +86,7 @@ const downloadFile = (path, name) => {
 
    const loadUsers = async () => {
     //const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
- const res = await fetch("https://13.207.152.124:5299/api/coin/all");
+ const res = await fetch("http://13.207.152.124:5299/api/coin/all");
   const data = await res.json();
   setUsers(data);
     // if (storedUsers.length === 0) {
@@ -196,7 +196,7 @@ const downloadFile = (path, name) => {
             {dark ? "🌙" : "☀️"}
           </div>
 
-          <div className="logout-btn" onClick={() => navigate("/")}>
+          <div className="logout-btn" onClick={() => navigate("/signin")}>
             Logout
           </div>
         </div>

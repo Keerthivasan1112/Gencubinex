@@ -60,7 +60,7 @@ function ForgotPassword() {
   const generateRandomQuestions = async () => {
 const finalOtp = otp.join("");
 debugger;
-  const res = await fetch("https://localhost:7085/api/signin/verify-otp", {
+  const res = await fetch("http://localhost:7085/api/signin/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp: finalOtp }),
@@ -109,7 +109,7 @@ debugger;
 
   const verifySecurityAnswers = async () => {
 
-  const res = await fetch("https://localhost:7085/api/signin/verify-security-answers", {
+  const res = await fetch("http://localhost:7085/api/signin/verify-security-answers", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -140,7 +140,7 @@ debugger;
     return;
   }
 
-  const res = await fetch("https://localhost:7085/api/signin/PasswordForgot", {
+  const res = await fetch("http://localhost:7085/api/signin/PasswordForgot", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
